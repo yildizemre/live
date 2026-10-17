@@ -3,312 +3,220 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Hype Live — Takipçilerini yayınına al</title>
-<meta name="description" content="Hype Live ile canlı yayını kodla aç, takipçilerin kameralarıyla katılsın. Kimi yayına alacağını sen seç; YouTube, Instagram ve TikTok'a grafiklerle aynı anda yayınla.">
-<meta property="og:title" content="Hype Live — Takipçilerini yayınına al">
-<meta property="og:description" content="Kodu paylaş, takipçilerin kameralarıyla katılsın, sen yönet. YouTube · Instagram · TikTok.">
-<meta property="og:image" content="img/icon-512.png">
-<meta name="theme-color" content="#07061a">
+<title>Hype Live — Takipçilerini canlı yayınına al</title>
+<meta name="description" content="Hype Live ile yayını aç, 6 haneli kodu paylaş. Takipçilerin telefon kameralarıyla katılsın, kimin yayında olacağını sen seç. YouTube, Instagram ve TikTok'a grafiklerle aynı anda yayınla.">
+<meta property="og:title" content="Hype Live — Takipçilerini canlı yayınına al">
+<meta property="og:description" content="Kodu paylaş, takipçilerin kameralarıyla katılsın, yayını sen yönet.">
+<meta property="og:image" content="img/og.jpg">
+<meta name="theme-color" content="#0c0b10">
 <link rel="icon" href="img/favicon.png">
 <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header class="nav" id="nav">
   <div class="wrap nav-in">
-    <a href="#" class="brand" aria-label="Hype Live ana sayfa"><img src="img/wordmark.png" alt="hype-live" width="148" height="37"></a>
+    <a href="#" class="brand" aria-label="Hype Live"><img src="img/wordmark.png" alt="hype-live" width="136" height="34"></a>
     <nav class="links" id="links">
-      <a href="#nasil">Nasıl çalışır</a>
+      <a href="#akis">Nasıl çalışır</a>
+      <a href="#ekran">İzleyici ne görür</a>
       <a href="#ozellikler">Özellikler</a>
-      <a href="#sov">Şov araçları</a>
-      <a href="#paketler">Paketler</a>
+      <a href="#fiyat">Fiyat</a>
       <a href="#sss">SSS</a>
+      <a href="#indir" class="nav-dl">APK indir</a>
     </nav>
-    <a href="#indir" class="btn btn-sm">Uygulamayı indir</a>
-    <button class="burger" id="burger" aria-label="Menü" aria-expanded="false"><span></span><span></span></button>
+    <button class="burger" id="burger" aria-label="Menüyü aç" aria-expanded="false" aria-controls="links"><span></span><span></span></button>
   </div>
 </header>
 
 <main>
-<!-- HERO -->
 <section class="hero">
-  <div class="glow g1"></div><div class="glow g2"></div>
   <div class="wrap hero-in">
-    <div class="hero-txt reveal">
-      <span class="chip"><i class="dot"></i> Canlı yayının yeni hali</span>
-      <h1>Takipçilerini <span class="grad">yayınına al.</span></h1>
-      <p class="lead">Yayını aç, 6 haneli kodu paylaş. Takipçilerin telefon kameralarıyla katılsın; kimin yayında olacağına sen karar ver. Grafikler, anketler ve quiz'lerle YouTube, Instagram ve TikTok'a aynı anda çık.</p>
+    <div class="hero-txt">
+      <p class="mono kicker">Android · Ücretsiz başla</p>
+      <h1>Takipçin kamerasını açsın,<br><em>yayını sen yönet.</em></h1>
+      <p class="lead">Yayını aç, 6 haneli kodu paylaş. Takipçilerin telefonlarından — uygulama olmadan, tarayıcıdan bile — kameralarıyla katılır. Kimi yayına alacağına sen karar verirsin; görüntü grafiklerle birlikte YouTube, Instagram ve TikTok'a gider.</p>
       <div class="cta-row">
-        <a href="#indir" class="btn">Ücretsiz başla</a>
-        <a href="#nasil" class="btn btn-ghost">Nasıl çalışır?</a>
+        <a href="#indir" class="btn">Uygulamayı indir</a>
+        <a href="#akis" class="btn btn-line">Nasıl çalışır?</a>
       </div>
-      <ul class="plat">
-        <li><svg viewBox="0 0 24 24"><path d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12a31 31 0 0 0 .5 4.8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1c.4-1.6.5-4.8.5-4.8s0-3.2-.5-4.8zM9.7 15V9l5.8 3-5.8 3z"/></svg> YouTube</li>
-        <li><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.2.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 3.9 3.9 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 8.2a3.2 3.2 0 1 1 0-6.4 3.2 3.2 0 0 1 0 6.4zm5.2-9.6a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4z"/></svg> Instagram</li>
-        <li><svg viewBox="0 0 24 24"><path d="M19.6 6.7a4.8 4.8 0 0 1-3.8-4.2V2h-3.4v13.7a2.9 2.9 0 1 1-2-2.8V9.4a6.3 6.3 0 1 0 5.4 6.3V8.7a8.2 8.2 0 0 0 4.8 1.5V6.8l-1-.1z"/></svg> TikTok</li>
-        <li><span class="more">+ Twitch, Kick, RTMP</span></li>
+      <dl class="facts">
+        <div><dt>Katılım</dt><dd>6 haneli kod ya da QR</dd></div>
+        <div><dt>Çıkış</dt><dd>YouTube · Instagram · TikTok · RTMP</dd></div>
+        <div><dt>Format</dt><dd>Dikey 9:16 ve yatay 16:9</dd></div>
+      </dl>
+    </div>
+    <div class="hero-vis">
+      <figure class="phone ph-a"><img src="img/p-poll.webp" alt="Yayıncı uygulaması: konuk yayında, ekranda canlı anket" width="600" height="1222"></figure>
+      <figure class="phone ph-b"><img src="img/p-guest.webp" alt="Konuğun tarayıcı ekranı: kamerası açık, tepki düğmeleri ve quiz" width="600" height="1298"></figure>
+      <p class="tag tag-a"><span class="mono">Yayıncı</span> Telefonda stüdyo</p>
+      <p class="tag tag-b"><span class="mono">Konuk</span> Tarayıcıdan katıldı</p>
+    </div>
+  </div>
+</section>
+
+<div class="plat-strip" aria-label="Desteklenen platformlar">
+  <div class="wrap plat-in">
+    <span class="mono">Aynı anda yayın</span>
+    <ul>
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12a31 31 0 0 0 .5 4.8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1c.4-1.6.5-4.8.5-4.8s0-3.2-.5-4.8zM9.7 15V9l5.8 3-5.8 3z"/></svg>YouTube</li>
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.2.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 3.9 3.9 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 8.2a3.2 3.2 0 1 1 0-6.4 3.2 3.2 0 0 1 0 6.4zm5.2-9.6a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4z"/></svg>Instagram</li>
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.6 6.7a4.8 4.8 0 0 1-3.8-4.2V2h-3.4v13.7a2.9 2.9 0 1 1-2-2.8V9.4a6.3 6.3 0 1 0 5.4 6.3V8.7a8.2 8.2 0 0 0 4.8 1.5V6.8l-1-.1z"/></svg>TikTok</li>
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.3 2 3 5.4v13.8h4.7V22h2.6l2.6-2.8h3.9L22 14V2H4.3zm15.9 11.1-3.1 3.1h-4.8L9.6 19v-2.8H5.7V3.8h14.5v9.3zM17.3 7v5.3h-1.8V7h1.8zm-4.8 0v5.3h-1.8V7h1.8z"/></svg>Twitch</li>
+      <li><span class="txt-logo">KICK</span></li>
+      <li><span class="txt-logo">RTMP</span></li>
+    </ul>
+  </div>
+</div>
+
+<section id="akis" class="sec light">
+  <div class="wrap">
+    <header class="sec-head">
+      <p class="mono kicker">Bir yayının akışı</p>
+      <h2>Beş adımda ortak yayın</h2>
+      <p>Aşağıdaki ekranlar uygulamanın kendisinden alındı. Dekor yok, kurgu yok.</p>
+    </header>
+    <ol class="flow" id="flow">
+      <li><figure class="phone sm"><img src="img/p-home.webp" alt="Ana sayfa: yayın adı ve Yayını başlat" width="600" height="1222" loading="lazy"></figure>
+        <span class="mono n">01</span><h3>Yayını aç</h3><p>Yayına bir ad ver. Uygulama 6 haneli bir davet kodu üretir.</p></li>
+      <li><figure class="phone sm"><img src="img/p-qr.webp" alt="Yayında katılım QR kodu" width="600" height="1222" loading="lazy"></figure>
+        <span class="mono n">02</span><h3>Kodu paylaş</h3><p>Hikâyende, WhatsApp'ta ya da yayın ekranında QR olarak.</p></li>
+      <li><figure class="phone sm"><img src="img/p-wait.webp" alt="Bekleme odası: iki takipçi sırada" width="600" height="1222" loading="lazy"></figure>
+        <span class="mono n">03</span><h3>Bekleme odası</h3><p>Kodu giren takipçi sıraya düşer. "Al" dersen kamerası açılır.</p></li>
+      <li><figure class="phone sm"><img src="img/p-onair.webp" alt="Program ekranında konuk yayında, isim bandıyla" width="600" height="1222" loading="lazy"></figure>
+        <span class="mono n">04</span><h3>Yayına al</h3><p>Kameraya dokun, program ona geçsin. İsim bandı kendiliğinden çıkar.</p></li>
+      <li><figure class="phone sm"><img src="img/p-summary.webp" alt="Yayın sonu özet kartı" width="600" height="1222" loading="lazy"></figure>
+        <span class="mono n">05</span><h3>Özeti paylaş</h3><p>Yayın bitince 9:16 özet kartı hazır — tek dokunuşla hikâyende.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section id="ekran" class="sec">
+  <div class="wrap">
+    <header class="sec-head left">
+      <p class="mono kicker">İzleyici ne görür</p>
+      <h2>Telefonda dokunursun,<br>yayında belirir.</h2>
+    </header>
+    <div class="out">
+      <div class="out-frame">
+        <div class="out-bar"><i></i><i></i><i></i><span class="mono">youtube.com/live · 1080p</span></div>
+        <img id="scr" src="img/tp_quiz.webp" alt="Yayın görüntüsü: quiz kartı, skor tablosu ve ürün kartı" width="1280" height="720" loading="lazy">
+      </div>
+      <ul class="out-tabs" role="tablist">
+        <li><button class="on" role="tab" aria-selected="true" data-img="tp_quiz" data-cap="Quiz: soruyu sorarsın, konuklar telefondan cevaplar. Doğru cevap ve puan tablosu yayında.">Quiz ve puan tablosu</button></li>
+        <li><button role="tab" aria-selected="false" data-img="tp_poll" data-cap="Anket: oylar geldikçe çubuklar canlı dolar.">Canlı anket</button></li>
+        <li><button role="tab" aria-selected="false" data-img="tp_scene" data-cap="Geri sayımlı 'Birazdan başlıyoruz' sahnesi. Bu sırada konukların sesi yayına gitmez.">Başlangıç sahnesi</button></li>
+        <li><button role="tab" aria-selected="false" data-img="tp_brb" data-cap="Mola verirken 'Hemen dönüyoruz' sahnesi; logon ve marka rengin ekranda kalır.">Mola sahnesi</button></li>
+      </ul>
+      <p class="out-cap" id="cap">Quiz: soruyu sorarsın, konuklar telefondan cevaplar. Doğru cevap ve puan tablosu yayında.</p>
+    </div>
+  </div>
+</section>
+
+<section id="ozellikler" class="sec">
+  <div class="wrap feat">
+    <div class="feat-vis">
+      <figure class="phone"><img id="fimg" src="img/p-cams.webp" alt="Kamera yönetimi ekranı" width="600" height="1222" loading="lazy"></figure>
+    </div>
+    <div class="feat-list">
+      <p class="mono kicker">Özellikler</p>
+      <h2>Cebindeki yayın masası</h2>
+      <dl class="spec" id="spec">
+        <div data-img="p-cams"><dt class="mono">Kamera</dt><dd><b>Tek ve bölünmüş ekran.</b> Kameraya dokun, yayına alsın; ikinci kişiye dokun, ekran ikiye bölünsün. Sessize al, çıkar, engelle.</dd></div>
+        <div data-img="p-cams"><dt class="mono">Ses</dt><dd><b>Aynı odada yankı yok.</b> "Aynı ortam" modunda yalnızca yayındaki kişinin mikrofonu gider. Yayıncının sesi ya da herkes modları da var.</dd></div>
+        <div data-img="p-gfx"><dt class="mono">Grafik</dt><dd><b>Logo, alt bant, kayan yazı, sponsor bandı.</b> Marka rengini seç ya da tema mağazasından hazır tema kullan.</dd></div>
+        <div data-img="p-poll"><dt class="mono">Şov</dt><dd><b>Anket, quiz, uçan emojiler.</b> Konuk süresi, sıradaki konuk uyarısı, ürün vitrini ve jingle'lar tek sekmede.</dd></div>
+        <div data-img="p-brb"><dt class="mono">Sahne</dt><dd><b>Başlıyoruz, mola, bitti.</b> Geri sayımlı açılış ve mola ekranları; sahne açıkken konukların sesi yayına gitmez.</dd></div>
+        <div data-img="p-summary"><dt class="mono">Sonrası</dt><dd><b>Rapor, klip, özet kartı.</b> Kim ne kadar yayında kaldı, kaç konuk katıldı; dikey klipler Reels ve Shorts için hazır.</dd></div>
+        <div data-img="p-profile"><dt class="mono">Profil</dt><dd><b>Takip ve planlama.</b> Takipçilerin canlıya çıktığında bildirim alır; planladığın yayın için 15 dakika önce hatırlatma gider.</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section class="sec split-sec">
+  <div class="wrap split">
+    <div>
+      <p class="mono kicker">Konuklar için</p>
+      <h2>Uygulama şart değil.</h2>
+      <p class="lead">Linke ya da yayındaki QR'a dokunan takipçi tarayıcıda açılan sayfaya adını yazar, onay kutusunu işaretler ve kamerasıyla sıraya girer. Yayındayken tepki gönderir, ankete oy verir, quiz'e cevap verir.</p>
+      <ul class="checks">
+        <li>Her konuk, görüntüsünün yayınlanacağını katılmadan önce onaylar</li>
+        <li>13 yaş altı katılamaz, onay kaydı tutulur</li>
+        <li>Yayıncı istemediği kişiyi çıkarıp kalıcı engelleyebilir</li>
       </ul>
     </div>
-    <div class="hero-vis reveal">
-      <div class="phone ph-main"><img src="img/grafik.webp" alt="Hype Live yayın stüdyosu: iki konuk bölünmüş ekranda, alt bant ve kayan yazı" width="540" height="1090"></div>
-      <div class="phone ph-back"><img src="img/kameralar.webp" alt="Kamera ızgarası: katılan takipçilerin kameraları" width="540" height="1090" loading="lazy"></div>
-      <div class="float f1"><b>UKFQRQ</b><small>davet kodu</small></div>
-      <div class="float f2"><i class="live">CANLI</i> 3 platform</div>
+    <div class="split-vis">
+      <figure class="phone"><img src="img/p-guest.webp" alt="Tarayıcıdan katılan konuğun ekranı" width="600" height="1298" loading="lazy"></figure>
+      <figure class="phone back"><img src="img/p-onboard.webp" alt="Profil kurulumu: fotoğraf, ad, kullanıcı adı" width="600" height="1222" loading="lazy"></figure>
     </div>
   </div>
 </section>
 
-<!-- STATS STRIP -->
-<section class="strip">
-  <div class="wrap strip-in">
-    <div><b>6</b><span>haneli kodla katılım</span></div>
-    <div><b>3+</b><span>platforma aynı anda</span></div>
-    <div><b>0</b><span>uygulama — konuk tarayıcıdan da girer</span></div>
-    <div><b>9:16</b><span>dikey ve yatay yayın</span></div>
-  </div>
-</section>
-
-<!-- HOW -->
-<section id="nasil" class="sec">
+<section id="fiyat" class="sec light">
   <div class="wrap">
-    <div class="sec-head reveal">
-      <span class="eyebrow">Nasıl çalışır</span>
-      <h2>Üç adımda <span class="grad">ortak yayın</span></h2>
-      <p>Ekip yok, kurgu masası yok. Bir telefon yeter — yönetmen sensin.</p>
+    <header class="sec-head">
+      <p class="mono kicker">Fiyat</p>
+      <h2>Ücretsiz başla, büyüyünce Pro'ya geç</h2>
+    </header>
+    <div class="table-wrap">
+      <table class="price">
+        <thead><tr><th scope="col"></th><th scope="col">Ücretsiz</th><th scope="col" class="pro">Pro</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Konuk</th><td>2</td><td>Sınırsız</td></tr>
+          <tr><th scope="row">Yayın süresi</th><td>30 dakika</td><td>Sınırsız</td></tr>
+          <tr><th scope="row">Platform</th><td>1</td><td>Aynı anda birden fazla</td></tr>
+          <tr><th scope="row">Şov araçları</th><td>Var</td><td>Var</td></tr>
+          <tr><th scope="row">Kendi logon</th><td>—</td><td>Var, filigransız</td></tr>
+          <tr><th scope="row">Kayıt ve klip</th><td>—</td><td>Var</td></tr>
+        </tbody>
+      </table>
     </div>
-    <div class="steps">
-      <article class="step reveal">
-        <span class="num">01</span>
-        <h3>Yayını aç, kodu paylaş</h3>
-        <p>Yayına bir ad ver, uygulama sana 6 haneli bir davet kodu ve link üretir. Hikâyende, WhatsApp'ta ya da yayında QR olarak paylaş.</p>
-      </article>
-      <article class="step reveal">
-        <span class="num">02</span>
-        <h3>Takipçilerin kameralarıyla katılsın</h3>
-        <p>Kodu giren takipçi bekleme odasına düşer. Uygulama yoksa tarayıcıdan girer. Onay verdiğin an kamerası açılır.</p>
-      </article>
-      <article class="step reveal">
-        <span class="num">03</span>
-        <h3>Kimi yayına alacağını sen seç</h3>
-        <p>Bir kameraya dokun — yayına o çıksın. İkinci kişiye dokun — bölünmüş ekran. Hepsi grafiklerinle YouTube, Instagram ve TikTok'ta.</p>
-      </article>
-    </div>
+    <p class="note">Ajans mısın? Birden çok yayıncıyı tek panelden izle, toplu rapor al. <a href="mailto:emre.yildiz@hypevisionlab.com?subject=Hype%20Live%20ajans">Bize yaz →</a></p>
   </div>
 </section>
 
-<!-- FEATURE ROWS -->
-<section id="ozellikler" class="sec">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <span class="eyebrow">Özellikler</span>
-      <h2>Cebindeki <span class="grad">yayın stüdyosu</span></h2>
-    </div>
-
-    <div class="row reveal">
-      <div class="row-vis"><div class="phone"><img src="img/kameralar.webp" alt="Katılımcı kameraları ızgarası" width="540" height="1090" loading="lazy"></div></div>
-      <div class="row-txt">
-        <span class="tag">Kamera yönetimi</span>
-        <h3>Herkes odada, yayında olan sensin seçtiğin</h3>
-        <p>Katılan herkesin kamerasını canlı izle. Tek dokunuşla yayına al, ikinci dokunuşla bölünmüş ekran yap. Mikrofonları ayrı ayrı yönet, istemediğin kişiyi çıkar ve engelle.</p>
-        <ul class="ticks">
-          <li>Tek ekran ve bölünmüş ekran</li>
-          <li>Aynı ortamda yankısız ses modu</li>
-          <li>Sadece yönet modu: kendi kameran kapalı</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="row rev reveal">
-      <div class="row-vis"><div class="phone"><img src="img/grafik.webp" alt="Marka rengi ve grafik ayarları" width="540" height="1090" loading="lazy"></div></div>
-      <div class="row-txt">
-        <span class="tag">Grafik ve marka</span>
-        <h3>Logon, rengin, alt bandın — profesyonel görünüm</h3>
-        <p>Canva'da hazırladığın logoyu yükle, marka rengini seç. Alt bant, kayan yazı, sponsor bandı ve soru kartı yayına otomatik basılır. Tema mağazasından hazır temalar seç.</p>
-        <ul class="ticks">
-          <li>Otomatik konuk bandı: yayındakinin adı kendiliğinden</li>
-          <li>Dönen sponsor logoları</li>
-          <li>Kayıtlı şablonlar</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="row reveal">
-      <div class="row-vis"><div class="phone"><img src="img/soru.webp" alt="Sohbetten seçilen soru ekranda kart olarak" width="540" height="1090" loading="lazy"></div></div>
-      <div class="row-txt">
-        <span class="tag">Etkileşim</span>
-        <h3>Sohbetten soruyu seç, ekrana çıksın</h3>
-        <p>Konukların yazdığı mesaja dokun — yayında soru kartı olarak belirsin. Uçan emojilerle tepkiler canlı akar, "sıradaki sensin" uyarısıyla konuk hazırlanır.</p>
-        <ul class="ticks">
-          <li>Uçan tepki emojileri</li>
-          <li>Konuk süresi ve sıra göstergesi</li>
-          <li>Bekleme odası ve onay</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="row rev reveal">
-      <div class="row-vis"><div class="phone"><img src="img/ozet.webp" alt="Yayın sonu paylaşılabilir özet kartı" width="540" height="1090" loading="lazy"></div></div>
-      <div class="row-txt">
-        <span class="tag">Yayın sonrası</span>
-        <h3>Özet kartı, rapor ve klipler</h3>
-        <p>Yayın bitince süre, konuk ve klip sayısını gösteren 9:16 özet kartı hazır — tek dokunuşla Instagram hikâyende. Kim ne kadar yayında kaldı raporunu ajansına gönder, klipleri Reels/Shorts olarak paylaş.</p>
-        <ul class="ticks">
-          <li>Hikâyede paylaşılabilir özet</li>
-          <li>Ayrıntılı yayın raporu</li>
-          <li>Dikey klip ve tekrar izleme</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SHOW TOOLS -->
-<section id="sov" class="sec sov">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <span class="eyebrow">Şov araçları</span>
-      <h2>Yayını <span class="grad">şova</span> çevir</h2>
-      <p>Hepsi tek sekmede. Telefonda dokunursun, izleyicinin ekranında anında belirir.</p>
-    </div>
-    <div class="screen reveal">
-      <div class="screen-tabs" role="tablist">
-        <button class="on" data-img="tp_quiz" role="tab">Quiz &amp; skor</button>
-        <button data-img="tp_poll" role="tab">Canlı anket</button>
-        <button data-img="tp_scene" role="tab">Geri sayım sahnesi</button>
-        <button data-img="tp_brb" role="tab">Hemen dönüyorum</button>
-      </div>
-      <div class="screen-frame"><img id="scr" src="img/tp_quiz.webp" alt="Yayın görüntüsü: quiz ve skor tablosu" width="1280" height="720" loading="lazy"></div>
-    </div>
-    <div class="grid">
-      <div class="card reveal"><i class="ic">📊</i><h4>Canlı anket</h4><p>Konuklar telefondan oy verir, çubuklar yayında canlı dolar.</p></div>
-      <div class="card reveal"><i class="ic">🏆</i><h4>Quiz &amp; skor tablosu</h4><p>Soru sor, cevabı göster, puanlar otomatik toplanır.</p></div>
-      <div class="card reveal"><i class="ic">⏱️</i><h4>Sahneler</h4><p>Geri sayımlı "Birazdan başlıyoruz", "Hemen dönüyorum", "Yayın bitti".</p></div>
-      <div class="card reveal"><i class="ic">🛍️</i><h4>Ürün vitrini</h4><p>Görsel, fiyat ve satın alma QR'ı ile canlı satış kartı.</p></div>
-      <div class="card reveal"><i class="ic">📱</i><h4>QR ile katılım</h4><p>İzleyen QR'ı okutur, uygulamasız tarayıcıdan kamerasıyla girer.</p></div>
-      <div class="card reveal"><i class="ic">🥁</i><h4>Jingle &amp; efektler</h4><p>Alkış, davul, tada — telifsiz efektler yayın sesine karışır.</p></div>
-      <div class="card reveal"><i class="ic">🎛️</i><h4>Hazır düzenler</h4><p>Tek kişi, röportaj, soru-cevap, yarışma — tek dokunuş.</p></div>
-      <div class="card reveal"><i class="ic">🎨</i><h4>Tema mağazası</h4><p>Neon, minimal, altın... yayının havasını tek seçimle değiştir.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- GALLERY -->
-<section class="sec gal-sec">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <span class="eyebrow">Uygulamadan</span>
-      <h2>Ekranlara <span class="grad">göz at</span></h2>
-    </div>
-  </div>
-  <div class="gallery" id="gallery">
-    <figure><div class="phone"><img src="img/ana.webp" alt="" width="540" height="1090" loading="lazy"></div><figcaption>Ana sayfa</figcaption></figure>
-    <figure><div class="phone"><img src="img/sahne.webp" alt="" width="540" height="1090" loading="lazy"></div><figcaption>Geri sayım sahnesi</figcaption></figure>
-    <figure><div class="phone"><img src="img/sov.webp" alt="" width="540" height="1090" loading="lazy"></div><figcaption>Şov sekmesi</figcaption></figure>
-    <figure><div class="phone"><img src="img/bekleme.webp" alt="" width="540" height="1090" loading="lazy"></div><figcaption>Bekleme odası</figcaption></figure>
-    <figure><div class="phone"><img src="img/yayin.webp" alt="" width="540" height="1090" loading="lazy"></div><figcaption>Çoklu platform</figcaption></figure>
-    <figure><div class="phone"><img src="img/paketler.webp" alt="" width="540" height="1090" loading="lazy"></div><figcaption>Paketler</figcaption></figure>
-    <figure><div class="phone"><img src="img/ozet.webp" alt="" width="540" height="1090" loading="lazy"></div><figcaption>Yayın özeti</figcaption></figure>
-  </div>
-</section>
-
-<!-- AUDIENCE -->
-<section class="sec">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <span class="eyebrow">Kimler için</span>
-      <h2>Topluluğu olan <span class="grad">herkes</span> için</h2>
-    </div>
-    <div class="aud">
-      <div class="aud-c reveal"><h4>Influencer'lar</h4><p>Takipçilerini sahneye çağır, soru-cevap ve yarışmalarla etkileşimi katla.</p></div>
-      <div class="aud-c reveal"><h4>Ajanslar</h4><p>Birden çok yayıncıyı tek panelden izle; toplu rapor ve CSV dışa aktarım.</p></div>
-      <div class="aud-c reveal"><h4>Markalar</h4><p>Canlı ürün vitrini, sponsor bandı ve QR ile satın almaya yönlendir.</p></div>
-      <div class="aud-c reveal"><h4>Eğitmenler &amp; podcast'çiler</h4><p>Konuk al, röportaj yap, kayıtları tekrar izlemeye aç.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- PRICING -->
-<section id="paketler" class="sec">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <span class="eyebrow">Paketler</span>
-      <h2>Ücretsiz başla, <span class="grad">büyüdükçe</span> geç</h2>
-    </div>
-    <div class="prices">
-      <div class="price reveal">
-        <h3>Ücretsiz</h3>
-        <div class="amt">₺0</div>
-        <ul class="ticks">
-          <li>2 konuk</li><li>30 dk yayın</li><li>1 platform</li><li>Şov araçları</li><li>Hype Live filigranı</li>
-        </ul>
-        <a href="#indir" class="btn btn-ghost">Hemen başla</a>
-      </div>
-      <div class="price pro reveal">
-        <span class="badge">En popüler</span>
-        <h3>Pro</h3>
-        <div class="amt">Aylık abonelik</div>
-        <ul class="ticks">
-          <li>Sınırsız konuk</li><li>Süre sınırı yok</li><li>Çoklu platform aynı anda</li><li>Kendi logon, filigransız</li><li>Kayıt, klip ve raporlar</li>
-        </ul>
-        <a href="#indir" class="btn">Pro'ya geç</a>
-      </div>
-      <div class="price reveal">
-        <h3>Ajans</h3>
-        <div class="amt">Teklif al</div>
-        <ul class="ticks">
-          <li>Çoklu yayıncı yönetimi</li><li>Toplu rapor &amp; CSV</li><li>Özel tema ve marka</li><li>Öncelikli destek</li>
-        </ul>
-        <a href="mailto:emre.yildiz@hypevisionlab.com?subject=Hype%20Live%20Ajans" class="btn btn-ghost">İletişime geç</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FAQ -->
 <section id="sss" class="sec">
   <div class="wrap narrow">
-    <div class="sec-head reveal">
-      <span class="eyebrow">SSS</span>
-      <h2>Merak <span class="grad">edilenler</span></h2>
-    </div>
-    <details class="reveal"><summary>Konukların uygulamayı indirmesi gerekiyor mu?</summary><p>Hayır. Uygulaması olan kodla girer; olmayan, paylaştığın linke ya da yayındaki QR'a dokunup tarayıcıdan kamerasıyla katılır.</p></details>
-    <details class="reveal"><summary>Instagram ve TikTok'a nasıl yayın yapılıyor?</summary><p>Uygulamadaki adım adım rehberle platformun verdiği yayın adresini ve anahtarını yapıştırırsın. YouTube'a doğrudan, Instagram ve TikTok'a yayın anahtarıyla çıkılır.</p></details>
-    <details class="reveal"><summary>Aynı odadaki telefonlar birbirinin sesini çalar mı?</summary><p>"Aynı ortam" ses modunda yalnızca yayındaki kişinin sesi gider; yankı ve geri besleme olmaz.</p></details>
-    <details class="reveal"><summary>Konuğun görüntüsü izinsiz yayınlanır mı?</summary><p>Hayır. Her konuk katılmadan önce görüntüsünün canlı yayınlanacağını onaylar; onay kaydı tutulur. Yayıncı istemediği kişiyi çıkarıp kalıcı olarak engelleyebilir.</p></details>
-    <details class="reveal"><summary>iPhone'da çalışıyor mu?</summary><p>Şu an Android uygulaması yayında. iOS sürümü yolda; o zamana kadar iPhone kullanan konuklar tarayıcıdan katılabilir.</p></details>
+    <header class="sec-head left"><p class="mono kicker">Sık sorulanlar</p><h2>Merak edilenler</h2></header>
+    <details><summary>Konukların uygulamayı indirmesi gerekiyor mu?</summary><p>Hayır. Uygulaması olan kodla girer; olmayan, paylaştığın linke ya da yayındaki QR'a dokunup tarayıcıdan kamerasıyla katılır.</p></details>
+    <details><summary>Instagram ve TikTok'a nasıl yayın yapılıyor?</summary><p>Uygulamadaki adım adım rehberle platformun verdiği yayın adresini ve anahtarını yapıştırırsın. YouTube'a doğrudan çıkılır.</p></details>
+    <details><summary>Aynı odadaki telefonlar birbirinin sesini çalar mı?</summary><p>"Aynı ortam" ses modunda yalnızca yayındaki kişinin mikrofonu yayına gider; yankı ve uğultu olmaz.</p></details>
+    <details><summary>Konuğun görüntüsü izinsiz yayınlanır mı?</summary><p>Hayır. Her konuk katılmadan önce görüntüsünün canlı yayınlanacağını onaylar ve bu onay kaydedilir.</p></details>
+    <details><summary>iPhone'da çalışıyor mu?</summary><p>Yayıncı uygulaması şu an Android'de. iPhone kullanan konuklar tarayıcıdan katılabilir.</p></details>
   </div>
 </section>
 
-<!-- CTA -->
-<section id="indir" class="sec">
-  <div class="wrap">
-    <div class="cta reveal">
-      <img src="img/icon.png" alt="" width="120" height="120" class="cta-ic">
-      <h2>Bir sonraki yayının <span class="grad">ortak</span> olsun.</h2>
-      <p>Android uygulamasını indir, ilk yayınını iki dakikada aç.</p>
-      <div class="cta-row center">
-        <a class="btn" href="https://expo.dev/artifacts/eas/yx2FzAxMArJ3zJw4YRIDBNno5dOs30q1GqkCH3gAA7A.apk">Android için indir (APK)</a>
-        <a class="btn btn-ghost" href="mailto:emre.yildiz@hypevisionlab.com">Bize yaz</a>
+<section id="indir" class="sec dl">
+  <div class="wrap dl-in">
+    <div>
+      <img src="img/icon.png" alt="" width="88" height="88" class="dl-ic">
+      <h2>İlk yayınını bugün aç.</h2>
+      <p class="lead">Android uygulamasını indir, hesabını aç, profilini kur. İki dakikada hazırsın.</p>
+      <div class="cta-row">
+        <a class="btn" id="apk" href="#">Android için indir (APK)</a>
+        <a class="btn btn-line" href="mailto:emre.yildiz@hypevisionlab.com">Bize yaz</a>
       </div>
-      <small class="muted">iOS yakında · Google Play yakında</small>
+      <p class="mono small">Sürüm 1.3.0 · Android 8 ve üzeri · Google Play yakında</p>
     </div>
+    <figure class="qr"><img src="img/apk-qr.png" alt="APK indirme bağlantısının QR kodu" width="180" height="180"><figcaption class="mono">Telefonla okut</figcaption></figure>
   </div>
 </section>
 </main>
 
 <footer class="foot">
   <div class="wrap foot-in">
-    <div><img src="img/wordmark.png" alt="hype-live" width="128" height="32"><p class="muted">Bir <a href="https://hypevisionlab.com">Hype Vision</a> ürünü.</p></div>
-    <div class="foot-links">
-      <a href="https://104-249-19-177.sslip.io/legal/">KVKK &amp; Gizlilik</a>
+    <img src="img/wordmark.png" alt="hype-live" width="116" height="29">
+    <nav class="foot-links" aria-label="Alt bağlantılar">
+      <a href="https://104-249-19-177.sslip.io/legal/">KVKK ve gizlilik</a>
       <a href="https://104-249-19-177.sslip.io/legal/#kosullar">Kullanım koşulları</a>
       <a href="mailto:emre.yildiz@hypevisionlab.com">İletişim</a>
-    </div>
-    <small class="muted">© <span id="yr">2026</span> Hype Vision</small>
+    </nav>
+    <small>© <span id="yr">2026</span> Hype Vision</small>
   </div>
 </footer>
 
