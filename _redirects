@@ -1,0 +1,10 @@
+# Rejivio uygulama sayfaları (social-live/template'ten kopyalanır). Dosya varsa önce o sunulur.
+/k/*            /k/index.html          200
+/u/*            /u/index.html          200
+/admin/*        /admin/index.html      200
+/agency/*       /agency/index.html     200
+/auth/*         /auth/index.html       200
+/legal/*        /legal/index.html      200
+# Yayın şablonu: egress paket türüne göre /sablon/pro/ ya da /sablon/free/ açar, ikisi de aynı sayfa
+/sablon/pro/*   /sablon/index.html     200
+/sablon/free/*  /sablon/index.html     200

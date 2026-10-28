@@ -1,0 +1,9 @@
+# Uygulama sayfaları ve yayın şablonu her zaman güncel sürümle açılsın (eski önbellek yayına karışmasın)
+[[headers]]
+  for = "/sablon/*"
+  [headers.values]
+    Cache-Control = "no-cache"
+[[headers]]
+  for = "/*/index.html"
+  [headers.values]
+    Cache-Control = "no-cache"

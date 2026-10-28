@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="tr" translate="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google" content="notranslate">
+<title>Rejivio Ajans Paneli</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #0b0c14; --card: #141625; --raised: #1d2034; --line: rgba(255,255,255,.09); --text: #f5f6fc; --muted: #9297b0; --violet: #8e4ff0; --pink: #e3609a; --ok: #3ddc97; --live: #ff4d5e; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 500 14px Inter, system-ui, sans-serif; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 22px 16px 60px; }
+  header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; } header img { height: 30px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-top: 18px; }
+  .stat { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; } .stat b { display: block; font-size: 26px; font-weight: 800; margin-top: 6px; }
+  .stat span, .muted { color: var(--muted); font-size: 12px; }
+  .box { background: var(--card); border: 1px solid var(--line); border-radius: 16px; margin-top: 16px; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; min-width: 680px; }
+  th { text-align: left; color: var(--muted); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; padding: 12px 14px; } td { padding: 11px 14px; border-top: 1px solid var(--line); }
+  .pill { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; background: var(--raised); color: var(--muted); }
+  .pill.pro { background: linear-gradient(90deg, var(--violet), var(--pink)); color: #fff; } .pill.ok { background: rgba(61,220,151,.14); color: var(--ok); }
+  input, select { background: var(--card); color: var(--text); border: 1px solid var(--line); padding: 11px 13px; border-radius: 10px; font: 500 14px Inter; }
+  button { padding: 11px 16px; border: 0; border-radius: 10px; color: #fff; font: 700 14px Inter; background: linear-gradient(90deg, #4f5bf0, var(--violet), var(--pink)); cursor: pointer; }
+  button.ghost { background: var(--raised); } button.d { background: rgba(255,77,94,.15); color: var(--live); }
+  .login { max-width: 360px; margin: 12vh auto; display: grid; gap: 10px; }
+  h2 { font-size: 18px; margin: 28px 0 0; } .err { color: var(--live); } .bar { height: 10px; border-radius: 6px; background: linear-gradient(90deg, #4f5bf0, var(--violet), var(--pink)); min-width: 3px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const sb = createClient('https://rrcknioeasynsbsmmnwr.supabase.co', 'sb_publishable_yXoivKQXRJM1CACo9RUThw_nO61Pkek', { auth: { storageKey: 'hl-agency' } });
+const app = document.getElementById('app');
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+let days = 30;
+
+function login(msg = '') {
+  app.innerHTML = `<form class="login" id="f"><img src="/brand/watermark.png" style="height:34px;margin-bottom:10px" alt="Rejivio">
+    <h2 style="margin:0 0 6px">Ajans paneli</h2><p class="muted">Rejivio hesabınla giriş yap.</p>
+    <input id="e" type="email" placeholder="E-posta" required><input id="p" type="password" placeholder="Şifre" required>
+    <button>Giriş yap</button><div class="err">${esc(msg)}</div></form>`;
+  document.getElementById('f').onsubmit = async (ev) => {
+    ev.preventDefault();
+    const { error } = await sb.auth.signInWithPassword({ email: e.value, password: p.value });
+    error ? login('E-posta ya da şifre hatalı') : boot();
+  };
+}
+
+async function boot() {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return login();
+  const { data: ag } = await sb.from('agencies').select('*').eq('owner_id', user.id).maybeSingle();
+  if (!ag) return create(user);
+  render(user, ag);
+}
+
+function create(user) {
+  app.innerHTML = `<header><img src="/brand/watermark.png" alt="Rejivio"><a href="#" id="out" class="muted">çıkış</a></header>
+    <h2>Ajansını oluştur</h2><p class="muted">Yönettiğin yayıncıları davet et, tüm yayınlarının raporunu tek ekranda gör.</p>
+    <div class="row"><input id="n" placeholder="Ajans adı" style="flex:1"><button id="c">Oluştur</button></div><div class="err" id="er"></div>`;
+  document.getElementById('out').onclick = async () => { await sb.auth.signOut(); login(); };
+  document.getElementById('c').onclick = async () => {
+    const name = document.getElementById('n').value.trim(); if (!name) return;
+    const { error } = await sb.from('agencies').insert({ owner_id: user.id, name });
+    error ? (document.getElementById('er').textContent = error.message) : boot();
+  };
+}
+
+async function render(user, ag) {
+  const [{ data: rep, error }, { data: members }] = await Promise.all([
+    sb.rpc('agency_report', { aid: ag.id, days }),
+    sb.from('agency_members').select('host_id, status, profiles(username)').eq('agency_id', ag.id),
+  ]);
+  if (error) { app.innerHTML = `<p class="err">${esc(error.message)}</p>`; return; }
+  const sum = (k) => rep.reduce((a, r) => a + (r[k] || 0), 0);
+  const maxMin = Math.max(1, ...rep.map((r) => r.live_minutes));
+  const pending = (members || []).filter((m) => m.status !== 'accepted');
+  app.innerHTML = `<header><div style="display:flex;gap:12px;align-items:center"><img src="/brand/watermark.png" alt="Rejivio"><b>${esc(ag.name)}</b></div>
+      <div class="row" style="margin:0"><select id="d"><option value="7">Son 7 gün</option><option value="30">Son 30 gün</option><option value="90">Son 90 gün</option></select>
+      <button class="ghost" id="csv">CSV indir</button><a href="#" id="out" class="muted">çıkış</a></div></header>
+    <div class="grid">
+      <div class="stat"><span>Yayıncı</span><b>${rep.length}</b></div><div class="stat"><span>Yayın</span><b>${sum('sessions')}</b></div>
+      <div class="stat"><span>Canlı dakika</span><b>${sum('live_minutes')}</b></div><div class="stat"><span>Konuk</span><b>${sum('guests')}</b></div>
+      <div class="stat"><span>Klip</span><b>${sum('clips')}</b></div><div class="stat"><span>Toplam takipçi</span><b>${sum('followers')}</b></div></div>
+    <h2>Yayıncılar</h2>
+    <div class="box"><table><thead><tr><th>Yayıncı</th><th>Paket</th><th>Yayın</th><th>Canlı dk</th><th></th><th>Konuk</th><th>Klip</th><th>Takipçi</th><th>Platformlar</th></tr></thead><tbody>
+      ${rep.length ? rep.map((r) => `<tr><td><a style="color:#c4a6ff" href="/u/${esc(r.username)}" target="_blank">@${esc(r.username)}</a></td>
+        <td><span class="pill ${r.plan !== 'free' ? 'pro' : ''}">${({ free: 'Başlangıç', pro: 'Creator', team: 'Ekip' })[r.plan] ?? r.plan}</span></td><td>${r.sessions}</td><td>${r.live_minutes}</td>
+        <td style="width:18%"><div class="bar" style="width:${(r.live_minutes / maxMin) * 100}%"></div></td>
+        <td>${r.guests}</td><td>${r.clips}</td><td>${r.followers}</td><td class="muted">${(r.platforms || []).join(', ') || '—'}</td></tr>`).join('')
+        : '<tr><td colspan="9" class="muted">Henüz kabul etmiş yayıncı yok. Aşağıdan davet et.</td></tr>'}</tbody></table></div>
+    <h2>Yayıncı davet et</h2>
+    <div class="row"><input id="u" placeholder="@kullaniciadi" style="flex:1"><button id="inv">Davet gönder</button></div><div class="err" id="er"></div>
+    ${pending.length ? `<div class="box"><table><tbody>${pending.map((m) => `<tr><td>@${esc(m.profiles?.username)}</td>
+      <td><span class="pill">${m.status === 'invited' ? 'DAVET BEKLİYOR' : 'REDDETTİ'}</span></td><td><button class="d" data-rm="${m.host_id}">Kaldır</button></td></tr>`).join('')}</tbody></table></div>` : ''}
+    <p class="muted" style="margin-top:14px">Yayıncı daveti Rejivio uygulamasında Profil → Ajans davetleri bölümünden kabul eder. Kabul etmeden hiçbir verisi görünmez.</p>`;
+  const sel = document.getElementById('d'); sel.value = String(days);
+  sel.onchange = () => { days = +sel.value; render(user, ag); };
+  document.getElementById('out').onclick = async () => { await sb.auth.signOut(); login(); };
+  document.getElementById('inv').onclick = async () => {
+    const name = document.getElementById('u').value.trim().toLowerCase().replace(/^@/, ''); const er = document.getElementById('er'); er.textContent = '';
+    const { data: prof } = await sb.from('profiles').select('id').eq('username', name).maybeSingle();
+    if (!prof) return (er.textContent = `@${name} bulunamadı`);
+    const { error } = await sb.from('agency_members').insert({ agency_id: ag.id, host_id: prof.id });
+    error ? (er.textContent = /duplicate/.test(error.message) ? 'Bu yayıncı zaten davet edilmiş' : error.message) : render(user, ag);
+  };
+  app.querySelectorAll('[data-rm]').forEach((b) => (b.onclick = async () => { await sb.from('agency_members').delete().eq('agency_id', ag.id).eq('host_id', b.dataset.rm); render(user, ag); }));
+  document.getElementById('csv').onclick = () => {
+    const head = 'yayinci,paket,yayin,canli_dk,konuk,klip,takipci,platformlar';
+    const rows = rep.map((r) => [r.username, r.plan, r.sessions, r.live_minutes, r.guests, r.clips, r.followers, (r.platforms || []).join(' ')].join(','));
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + [head, ...rows].join('\n')], { type: 'text/csv' }));
+    a.download = `Rejivio-ajans-${days}gun.csv`; a.click();
+  };
+}
+boot();
+</script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="tr" translate="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google" content="notranslate">
+<title>Rejivio — hesap</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #0b0c14; --card: #141625; --line: rgba(255,255,255,.12); --text: #f5f6fc; --muted: #9297b0; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 16px; background:
+    radial-gradient(circle at 20% 0%, rgba(79,91,240,.35), transparent 50%), radial-gradient(circle at 90% 100%, rgba(227,96,154,.25), transparent 50%), var(--bg);
+    color: var(--text); font-family: Inter, system-ui, sans-serif; }
+  .card { width: 100%; max-width: 420px; background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 28px; }
+  img { height: 36px; margin-bottom: 22px; }
+  h1 { font-size: 24px; margin: 0 0 8px; letter-spacing: -.02em; }
+  p { color: var(--muted); line-height: 1.5; margin: 0 0 18px; }
+  input { width: 100%; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--line); background: #0f1120; color: var(--text); font: 500 16px Inter, sans-serif; margin-bottom: 12px; }
+  button, .btn { display: block; width: 100%; text-align: center; padding: 15px; border: 0; border-radius: 14px; color: #fff; font: 700 16px Inter, sans-serif; text-decoration: none; cursor: pointer;
+    background: linear-gradient(90deg, #4f5bf0, #8e4ff0, #e3609a); }
+  .err { color: #ff6b7a; } .ok { color: #3ddc97; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="card">
+  <img src="/brand/watermark.png" alt="Rejivio">
+  <div id="loading"><h1>Bir saniye…</h1></div>
+
+  <div id="confirmed" class="hidden">
+    <h1>E-postan doğrulandı ✓</h1>
+    <p>Hesabın hazır. Rejivio uygulamasına dönüp giriş yapabilirsin.</p>
+    <a class="btn" href="hypelive://auth">Uygulamayı aç</a>
+  </div>
+
+  <div id="reset" class="hidden">
+    <h1>Yeni şifre belirle</h1>
+    <p>En az 6 karakterlik yeni şifreni yaz.</p>
+    <input id="p1" type="password" placeholder="Yeni şifre" autocomplete="new-password">
+    <input id="p2" type="password" placeholder="Yeni şifre (tekrar)" autocomplete="new-password">
+    <p id="msg"></p>
+    <button id="save">Şifreyi kaydet</button>
+  </div>
+
+  <div id="done" class="hidden">
+    <h1>Şifren değişti ✓</h1>
+    <p>Uygulamaya dönüp yeni şifrenle giriş yapabilirsin.</p>
+    <a class="btn" href="hypelive://auth">Uygulamayı aç</a>
+  </div>
+
+  <div id="failed" class="hidden">
+    <h1>Link geçersiz</h1>
+    <p id="why">Bu linkin süresi dolmuş ya da daha önce kullanılmış. Uygulamadan yeni bir link iste.</p>
+  </div>
+</div>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const sb = createClient('https://rrcknioeasynsbsmmnwr.supabase.co', 'sb_publishable_yXoivKQXRJM1CACo9RUThw_nO61Pkek', {
+  auth: { detectSessionInUrl: true, persistSession: false, flowType: 'implicit' },
+});
+const show = (id) => { for (const el of document.querySelectorAll('.card > div')) el.classList.add('hidden'); document.getElementById(id).classList.remove('hidden'); };
+
+const hash = new URLSearchParams(location.hash.slice(1));
+const query = new URLSearchParams(location.search);
+const type = hash.get('type') || query.get('type');
+const error = hash.get('error_description') || query.get('error_description');
+
+if (error) {
+  document.getElementById('why').textContent = /expired|invalid/i.test(error)
+    ? 'Bu linkin süresi dolmuş ya da daha önce kullanılmış. Uygulamadan yeni bir link iste.' : error;
+  show('failed');
+} else {
+  // Supabase oturumu linkteki jetondan kurar
+  await new Promise((r) => setTimeout(r, 600));
+  const { data } = await sb.auth.getSession();
+  if (type === 'recovery' && data.session) show('reset');
+  else if (data.session || type === 'signup' || type === 'email') show('confirmed');
+  else show('failed');
+}
+
+document.getElementById('save').onclick = async () => {
+  const p1 = document.getElementById('p1').value, p2 = document.getElementById('p2').value, msg = document.getElementById('msg');
+  msg.className = 'err';
+  if (p1.length < 6) return (msg.textContent = 'Şifre en az 6 karakter olmalı.');
+  if (p1 !== p2) return (msg.textContent = 'Şifreler aynı değil.');
+  const { error } = await sb.auth.updateUser({ password: p1 });
+  if (error) return (msg.textContent = 'Kaydedilemedi: ' + error.message);
+  await sb.auth.signOut();
+  show('done');
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="tr" translate="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="google" content="notranslate">
+<title>Rejivio yayınına katıl</title>
+<meta property="og:title" content="Rejivio yayınına davetlisin">
+<meta property="og:description" content="Uygulama indirmeden, kameranla canlı yayına katıl.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #0b0c14; --card: #141625; --raised: #1d2034; --line: rgba(255,255,255,.12); --text: #f5f6fc; --muted: #9297b0; --violet: #8e4ff0; --pink: #e3609a; --live: #ff4d5e; --ok: #3ddc97; --warn: #ffb547; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin: 0; min-height: 100vh; color: var(--text); font-family: Inter, system-ui, sans-serif;
+    background: radial-gradient(circle at 20% 0%, rgba(79,91,240,.35), transparent 50%), radial-gradient(circle at 90% 100%, rgba(227,96,154,.25), transparent 50%), var(--bg); }
+  main { max-width: 440px; margin: 0 auto; padding: 22px 16px 40px; }
+  img.logo { height: 36px; }
+  h1 { font-size: 26px; margin: 20px 0 6px; letter-spacing: -.02em; }
+  p { color: var(--muted); line-height: 1.5; margin: 0 0 14px; }
+  .code { font-size: 36px; font-weight: 800; letter-spacing: 8px; text-align: center; margin: 14px 0; padding: 14px; border-radius: 18px; background: var(--card); border: 1px solid var(--line); }
+  .btn { display: block; width: 100%; text-align: center; padding: 15px; border-radius: 14px; color: #fff; font: 700 16px Inter, sans-serif; text-decoration: none; border: 0; margin-top: 10px; cursor: pointer;
+    background: linear-gradient(90deg, #4f5bf0, var(--violet), var(--pink)); }
+  .btn.ghost { background: transparent; border: 1px solid rgba(255,255,255,.2); }
+  .btn.live { background: var(--live); } .btn:disabled { opacity: .5; }
+  input { width: 100%; padding: 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--card); color: var(--text); font: 500 16px Inter, sans-serif; margin-top: 10px; }
+  label.chk { display: flex; gap: 10px; align-items: flex-start; margin-top: 12px; color: var(--muted); font-size: 13px; line-height: 1.45; }
+  label.chk input { width: 20px; height: 20px; margin: 2px 0 0; flex: none; accent-color: var(--violet); }
+  a { color: #c4a6ff; }
+  .err { color: var(--live); font-size: 14px; margin-top: 10px; } .hidden { display: none !important; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 14px; margin-top: 12px; }
+  .status { display: flex; gap: 10px; align-items: center; font-weight: 700; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--muted); flex: none; }
+  .onair { border-color: var(--live); } .onair .dot { background: var(--live); }
+  video#me { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 18px; background: #000; transform: scaleX(-1); margin-top: 12px; }
+  .row { display: flex; gap: 8px; } .row > * { flex: 1; }
+  .emo { font-size: 26px; padding: 10px 0; border-radius: 14px; background: var(--raised); border: 1px solid var(--line); cursor: pointer; }
+  .opt { display: block; width: 100%; text-align: left; padding: 12px 14px; margin-top: 8px; border-radius: 12px; background: var(--raised); border: 1px solid var(--line); color: var(--text); font: 600 15px Inter, sans-serif; cursor: pointer; }
+  .opt.sel { border-color: var(--violet); background: rgba(142,79,240,.2); }
+  .pulse { width: 90px; height: 90px; margin: 20px auto; border-radius: 50%; background: linear-gradient(135deg, #4f5bf0, var(--violet), var(--pink)); animation: p 1.6s infinite; }
+  @keyframes p { 0% { box-shadow: 0 0 0 0 rgba(142,79,240,.6); } 100% { box-shadow: 0 0 0 30px rgba(142,79,240,0); } }
+  small { color: #6b6f85; display: block; margin-top: 14px; }
+</style>
+</head>
+<body>
+<main>
+  <img class="logo" src="/brand/watermark.png" alt="Rejivio">
+
+  <!-- 1) Davet -->
+  <section id="v-start">
+    <h1>Canlı yayına davetlisin</h1>
+    <p>Uygulama yüklüyse onunla aç, ya da indirmeden tarayıcından kameranla katıl.</p>
+    <div class="code" id="code">——————</div>
+    <button class="btn" id="go-web">Tarayıcıdan katıl</button>
+    <a class="btn ghost" id="open-app" href="#">Uygulamada aç</a>
+    <a class="btn ghost" href="https://expo.dev/artifacts/eas/SukRIAlrNeEE_ayUfZnL0w81ly73p5NYXXJ6JtdC6Ik.apk">Uygulamayı indir (Android)</a>
+  </section>
+
+  <!-- 2) İsim + onay -->
+  <section id="v-form" class="hidden">
+    <h1>Yayına katıl</h1>
+    <p>Yayında görünecek adını yaz. Hesap açman gerekmiyor.</p>
+    <input id="name" maxlength="18" placeholder="Adın (ör. ayse)" autocomplete="nickname">
+    <input id="year" inputmode="numeric" maxlength="4" placeholder="Doğum yılın (ör. 1998)">
+    <label class="chk"><input type="checkbox" id="consent"> <span>Görüntümün ve sesimin yayıncının seçtiği platformlarda (YouTube, Instagram, TikTok vb.) canlı yayınlanabileceğini kabul ediyorum. <a href="/legal/#riza" target="_blank">Açık rıza</a> · <a href="/legal/#kosullar" target="_blank">Koşullar</a></span></label>
+    <div class="err" id="form-err"></div>
+    <button class="btn" id="join">Kamerayı aç ve katıl</button>
+  </section>
+
+  <!-- 3) Bekleme -->
+  <section id="v-wait" class="hidden" style="text-align:center">
+    <div class="pulse"></div>
+    <h1>Sıradasın</h1>
+    <p>Yayıncı seni yayına aldığında kameran otomatik açılacak. Bu sayfayı kapatma.</p>
+    <button class="btn ghost" id="cancel">Vazgeç</button>
+  </section>
+
+  <!-- 4) Yayında -->
+  <section id="v-live" class="hidden">
+    <div class="card status" id="status"><span class="dot"></span><span id="status-t">Bağlanılıyor…</span></div>
+    <div class="card hidden" id="next-card"></div>
+    <video id="me" autoplay playsinline muted></video>
+    <div class="row" style="margin-top:12px">
+      <button class="emo" data-e="❤️">❤️</button><button class="emo" data-e="🔥">🔥</button><button class="emo" data-e="😂">😂</button><button class="emo" data-e="👏">👏</button><button class="emo" data-e="😮">😮</button>
+    </div>
+    <div class="card hidden" id="poll"><b id="poll-q"></b><div id="poll-o"></div></div>
+    <div class="card hidden" id="quiz"><b id="quiz-q"></b><div id="quiz-o"></div></div>
+    <div class="card">
+      <b>Yayıncıya soru sor</b>
+      <div class="row" style="margin-top:4px"><input id="msg" maxlength="160" placeholder="Sorunu yaz" style="flex:3"><button class="btn" id="send" style="flex:1;margin-top:10px">Gönder</button></div>
+    </div>
+    <div class="row">
+      <button class="btn ghost" id="mic">🎤 Mikrofon açık</button>
+      <button class="btn live" id="leave">Ayrıl</button>
+    </div>
+  </section>
+
+  <section id="v-end" class="hidden" style="text-align:center">
+    <h1 id="end-t">Yayın bitti</h1>
+    <p id="end-s">Katıldığın için teşekkürler! 💜</p>
+    <a class="btn" href="https://expo.dev/artifacts/eas/SukRIAlrNeEE_ayUfZnL0w81ly73p5NYXXJ6JtdC6Ik.apk">Kendi yayınını aç — Rejivio'yu indir</a>
+  </section>
+
+  <small id="foot">Rejivio · <a href="/legal/">Yasal</a></small>
+</main>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+import { Room, RoomEvent, Track, DisconnectReason } from 'https://cdn.jsdelivr.net/npm/livekit-client@2/+esm';
+
+const SB = createClient('https://rrcknioeasynsbsmmnwr.supabase.co', 'sb_publishable_yXoivKQXRJM1CACo9RUThw_nO61Pkek', {
+  auth: { persistSession: true, storageKey: 'hl-guest' },
+});
+const $ = (id) => document.getElementById(id);
+const show = (id) => { for (const s of document.querySelectorAll('main > section')) s.classList.add('hidden'); $(id).classList.remove('hidden'); };
+const code = (location.pathname.split('/k/')[1] || location.hash.slice(1) || '').replace(/[^A-Za-z0-9]/g, '').slice(0, 6).toUpperCase();
+$('code').textContent = code || '——————';
+$('open-app').href = 'hypelive://k/' + code;
+if (!code) $('go-web').disabled = true;
+
+let session = null, room = null, me = null, pollTimer = null, myName = '';
+const voted = {}, answered = {};
+
+$('go-web').onclick = () => {
+  // Kamera izni için HTTPS şart
+  if (!window.isSecureContext) { location.href = 'https://' + location.host + location.pathname; return; }
+  show('v-form');
+  $('name').value = localStorage.getItem('hl-name') || '';
+};
+
+$('join').onclick = async () => {
+  const err = $('form-err'); err.textContent = '';
+  const name = $('name').value.trim().toLowerCase().replace(/[^a-z0-9_.ğüşıöç]/g, '').replace(/[ğüşıöç]/g, (c) => ({ ğ: 'g', ü: 'u', ş: 's', ı: 'i', ö: 'o', ç: 'c' }[c])).slice(0, 14);
+  const year = Number($('year').value);
+  const age = new Date().getFullYear() - year;
+  if (name.length < 2) return (err.textContent = 'En az 2 harflik bir ad yaz.');
+  if (!year || age < 0 || age > 110) return (err.textContent = 'Doğum yılını yaz.');
+  if (age < 13) return (err.textContent = 'Rejivio 13 yaşından küçükler için uygun değil.');
+  if (!$('consent').checked) return (err.textContent = 'Devam etmek için onay kutusunu işaretle.');
+  $('join').disabled = true;
+  try {
+    // Kamera iznini en baştan iste: reddedilirse sıraya hiç girmesin
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: true });
+    stream.getTracks().forEach((t) => t.stop());
+
+    let { data: { session: auth } } = await SB.auth.getSession();
+    if (!auth) {
+      const uname = name + '_' + Math.floor(1000 + Math.random() * 9000);
+      const r = await SB.auth.signInAnonymously({ options: { data: { username: uname, birth_year: String(year), terms: 'true', locale: 'tr' } } });
+      if (r.error) throw r.error;
+    }
+    localStorage.setItem('hl-name', $('name').value.trim());
+    const r = await SB.rpc('join_by_code', { code, consent: true });
+    if (r.error) throw r.error;
+    session = r.data.session;
+    myName = (await SB.from('profiles').select('username').eq('id', (await SB.auth.getUser()).data.user.id).single()).data?.username;
+    if (r.data.status === 'pending') { show('v-wait'); waitLoop(); } else enter();
+  } catch (e) {
+    $('join').disabled = false;
+    err.textContent = /Permission|NotAllowed/i.test(e.name || e.message) ? 'Kamera ve mikrofon izni vermen gerekiyor.' : (e.message || 'Bir hata oluştu');
+  }
+};
+
+function waitLoop() {
+  const uid = () => SB.auth.getUser().then((r) => r.data.user.id);
+  pollTimer = setInterval(async () => {
+    const { data } = await SB.from('invites').select('status').eq('session_id', session.id).eq('invitee_id', await uid()).maybeSingle();
+    if (data?.status === 'accepted') { clearInterval(pollTimer); enter(); }
+    if (data?.status === 'declined') { clearInterval(pollTimer); end('Bu sefer olmadı', 'Yayıncı seni şu an yayına almadı.'); }
+  }, 3000);
+}
+$('cancel').onclick = async () => {
+  clearInterval(pollTimer);
+  const { data: { user } } = await SB.auth.getUser();
+  await SB.from('invites').update({ status: 'declined' }).eq('session_id', session.id).eq('invitee_id', user.id);
+  end('Vazgeçtin', 'İstediğin zaman linke tekrar tıklayabilirsin.');
+};
+
+function end(t, s) {
+  $('end-t').textContent = t; $('end-s').textContent = s;
+  room?.disconnect(); show('v-end');
+}
+
+async function enter() {
+  show('v-live');
+  const r = await SB.functions.invoke('livekit-token', { body: { sessionId: session.id } });
+  if (r.error || r.data?.error) return end('Bağlanılamadı', r.data?.error || 'Tekrar dene.');
+  room = new Room({ adaptiveStream: true, dynacast: true });
+  room.on(RoomEvent.ParticipantAttributesChanged, update);
+  room.on(RoomEvent.ParticipantConnected, update);
+  room.on(RoomEvent.Disconnected, (reason) => {
+    if (reason === DisconnectReason.PARTICIPANT_REMOVED) end('Yayından çıkarıldın', 'Yayıncı seni bu yayından çıkardı.');
+    else if (!$('v-end').classList.contains('hidden')) return; else end('Yayın bitti', 'Katıldığın için teşekkürler! 💜');
+  });
+  // Uzak sesler: yalnızca "herkes" modunda çalınır (aynı ortamda yankı olmasın)
+  room.on(RoomEvent.TrackSubscribed, (track) => { if (track.kind === Track.Kind.Audio) { const el = track.attach(); el.dataset.remote = '1'; document.body.appendChild(el); update(); } });
+  await room.connect(r.data.url, r.data.token);
+  await room.localParticipant.enableCameraAndMicrophone();
+  const cam = room.localParticipant.getTrackPublication(Track.Source.Camera)?.videoTrack;
+  cam?.attach($('me'));
+  me = room.localParticipant.identity;
+  update();
+}
+
+function host() {
+  return [...room.remoteParticipants.values()].find((p) => { try { return JSON.parse(p.metadata || '{}').role === 'host'; } catch { return false; } });
+}
+
+function update() {
+  const h = host(); if (!h) return;
+  let o = {}; try { o = JSON.parse(h.attributes.overlay || '{}'); } catch {}
+  if (h.attributes.ended === '1') return end('Yayın bitti', 'Katıldığın için teşekkürler! 💜');
+  const program = h.attributes.program || h.identity;
+  const live = program === me || (o.layout?.mode === 'split' && o.layout.second === me);
+  $('status').classList.toggle('onair', live);
+  $('status-t').textContent = live ? '🔴 Şu an senin kameran yayında' : 'Hazırdasın — yayıncı seçince yayına gireceksin';
+  const nx = $('next-card');
+  nx.classList.toggle('hidden', !o.next);
+  nx.textContent = o.next === myName ? '⏭ Sıradaki sensin, hazırlan!' : o.next ? 'Sıradaki: @' + o.next : '';
+  for (const el of document.querySelectorAll('audio[data-remote]')) el.muted = (o.audio || 'program') !== 'all';
+
+  // Anket
+  const p = o.poll || {};
+  $('poll').classList.toggle('hidden', !(p.on && p.q));
+  if (p.on) {
+    $('poll-q').textContent = p.q;
+    $('poll-o').innerHTML = (p.options || []).map((t, i) => `<button class="opt ${voted[p.id] === i ? 'sel' : ''}" data-i="${i}">${String.fromCharCode(65 + i)}. ${esc(t)}</button>`).join('');
+    $('poll-o').querySelectorAll('button').forEach((b) => b.onclick = () => {
+      if (voted[p.id] !== undefined) return;
+      voted[p.id] = +b.dataset.i; send('vote', { id: p.id, i: +b.dataset.i }); update();
+    });
+  }
+  // Quiz
+  const z = o.quiz || {};
+  $('quiz').classList.toggle('hidden', !(z.on && z.q));
+  if (z.on) {
+    $('quiz-q').textContent = z.q + (z.reveal ? ' — doğru cevap: ' + String.fromCharCode(65 + z.correct) : '');
+    $('quiz-o').innerHTML = (z.options || []).map((t, i) => `<button class="opt ${answered[z.id] === i ? 'sel' : ''}" data-i="${i}" ${z.reveal ? 'disabled' : ''}>${String.fromCharCode(65 + i)}. ${esc(t)}</button>`).join('');
+    $('quiz-o').querySelectorAll('button').forEach((b) => b.onclick = () => {
+      if (answered[z.id] !== undefined || z.reveal) return;
+      answered[z.id] = +b.dataset.i; send('quiz', { id: z.id, i: +b.dataset.i, name: myName }); update();
+    });
+  }
+}
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const send = (topic, obj) => room?.localParticipant.publishData(new TextEncoder().encode(JSON.stringify(obj)), { reliable: true, topic });
+
+document.querySelectorAll('.emo').forEach((b) => b.onclick = () => send('react', { e: b.dataset.e, name: myName }));
+$('send').onclick = () => {
+  const t = $('msg').value.trim(); if (!t) return;
+  send('chat', { id: Date.now() + '-' + Math.random(), from: myName, text: t, ts: Date.now() });
+  $('msg').value = ''; $('send').textContent = 'Gönderildi ✓'; setTimeout(() => ($('send').textContent = 'Gönder'), 1500);
+};
+$('mic').onclick = async () => {
+  const on = !room.localParticipant.isMicrophoneEnabled;
+  await room.localParticipant.setMicrophoneEnabled(on);
+  $('mic').textContent = on ? '🎤 Mikrofon açık' : '🔇 Mikrofon kapalı';
+};
+$('leave').onclick = () => { if (confirm('Yayından ayrılmak istiyor musun?')) end('Yayından ayrıldın', 'Katıldığın için teşekkürler! 💜'); };
+
+// Uygulama yüklüyse kodu panoya kopyala (kurulumdan sonra kolay yapıştırılsın)
+if (code) navigator.clipboard?.writeText(code).catch(() => {});
+</script>
+</body>
+</html>

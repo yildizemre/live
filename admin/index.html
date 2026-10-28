@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="tr" translate="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google" content="notranslate">
+<meta name="robots" content="noindex">
+<title>Rejivio Yönetim</title>
+<link rel="icon" href="/brand/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07061a;--side:#0b0a22;--card:#110f2c;--raised:#1a1740;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.13);--text:#f3f1ff;--muted:#9a96c0;
+  --violet:#9b3dff;--pink:#e63ce0;--coral:#ff6a6a;--ok:#34d399;--warn:#fbbf24;--live:#ff4d6d;--grad:linear-gradient(120deg,#9b3dff,#e63ce0 55%,#ff6a6a)}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--text);font:500 14px 'Plus Jakarta Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+.muted{color:var(--muted)} .err{color:var(--live)}
+/* login */
+.login-wrap{min-height:100vh;display:grid;place-items:center;padding:16px;background:radial-gradient(ellipse at 50% -10%,rgba(155,61,255,.35),transparent 60%)}
+.login{width:min(380px,100%);background:var(--card);border:1px solid var(--line);border-radius:24px;padding:32px;display:grid;gap:12px;box-shadow:0 40px 80px -40px #000}
+.login img.ic{width:64px;height:64px;margin:0 auto 6px}
+.login h1{font-size:22px;text-align:center}
+.login p{text-align:center;margin-bottom:8px}
+.in{background:var(--raised);border:1px solid var(--line);padding:12px 14px;border-radius:12px;outline:none;width:100%}
+.in:focus{border-color:rgba(230,60,224,.6)}
+.btn{border:0;cursor:pointer;padding:12px 18px;border-radius:12px;background:var(--grad);color:#fff;font-weight:700;display:inline-flex;align-items:center;gap:8px;justify-content:center;transition:filter .2s}
+.btn:hover{filter:brightness(1.1)} .btn:disabled{opacity:.5;cursor:default}
+.btn.ghost{background:var(--raised);border:1px solid var(--line)}
+.btn.sm{padding:7px 11px;font-size:12.5px;border-radius:9px}
+.btn.danger{background:rgba(255,77,109,.14);color:var(--live);border:1px solid rgba(255,77,109,.3)}
+/* layout */
+.app{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
+aside{background:var(--side);border-right:1px solid var(--line);padding:22px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:4px}
+aside .logo{display:flex;align-items:center;gap:10px;padding:0 8px 22px}
+aside .logo img{height:28px}
+aside .logo span{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--muted);border:1px solid var(--line2);padding:2px 7px;border-radius:6px}
+.nav-b{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;border:0;background:none;cursor:pointer;color:var(--muted);font-weight:600;text-align:left;width:100%;position:relative}
+.nav-b svg{width:19px;height:19px;flex:none}
+.nav-b:hover{background:rgba(255,255,255,.04);color:var(--text)}
+.nav-b.on{background:linear-gradient(90deg,rgba(155,61,255,.22),rgba(230,60,224,.08));color:#fff}
+.nav-b.on::before{content:"";position:absolute;left:-14px;top:9px;bottom:9px;width:3px;border-radius:3px;background:var(--grad)}
+.nav-b .cnt{margin-left:auto;background:var(--live);color:#fff;font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px}
+aside .me{margin-top:auto;display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+.av{width:34px;height:34px;border-radius:50%;background:var(--grad);display:grid;place-items:center;font-weight:800;font-size:13px;overflow:hidden;flex:none}
+.av img{width:100%;height:100%;object-fit:cover}
+main{padding:28px 32px 60px;min-width:0}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.top h1{font-size:26px;letter-spacing:-.02em}
+.top p{margin-top:2px}
+.burger{display:none}
+/* cards */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media (max-width:1300px){.kpis{grid-template-columns:repeat(3,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;position:relative;overflow:hidden}
+.kpi .ico{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:rgba(155,61,255,.16);color:#d6b8ff;margin-bottom:14px}
+.kpi .ico svg{width:19px;height:19px}
+.kpi b{display:block;font-size:28px;font-weight:800;letter-spacing:-.02em}
+.kpi span{color:var(--muted);font-size:12.5px;font-weight:600}
+.kpi.hl{background:linear-gradient(var(--card),var(--card)) padding-box,var(--grad) border-box;border:1px solid transparent}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;margin-top:18px}
+.panel h3{font-size:16px;margin-bottom:4px}
+.panel-h{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.two{display:grid;grid-template-columns:1.6fr 1fr;gap:18px}
+.two>.panel{margin-top:18px}
+/* chart */
+.chart{display:flex;align-items:flex-end;gap:4px;height:190px;padding-top:10px}
+.chart .c{flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;height:100%;position:relative;cursor:default}
+.chart .c i{display:block;border-radius:4px 4px 2px 2px;min-height:2px}
+.chart .c i.a{background:var(--grad)} .chart .c i.b{background:rgba(155,61,255,.35)}
+.chart .c:hover::after{content:attr(data-t);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);white-space:pre;background:#000;border:1px solid var(--line2);padding:6px 8px;border-radius:8px;font-size:11.5px;z-index:2;margin-bottom:6px}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.xl{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:8px}
+/* funnel */
+.fn{display:grid;gap:12px}
+.fn .r{display:grid;grid-template-columns:1fr auto;gap:6px}
+.fn .bar{grid-column:1/-1;height:8px;border-radius:6px;background:var(--raised);overflow:hidden}
+.fn .bar i{display:block;height:100%;background:var(--grad);border-radius:6px}
+/* table */
+.tbl{overflow-x:auto;margin:0 -20px -20px}
+table{width:100%;border-collapse:collapse;min-width:680px}
+th{text-align:left;color:var(--muted);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:12px 20px;font-weight:700}
+td{padding:12px 20px;border-top:1px solid var(--line);vertical-align:middle}
+tr.click{cursor:pointer} tr.click:hover td{background:rgba(255,255,255,.025)}
+.u{display:flex;align-items:center;gap:10px}
+.u small{display:block;color:var(--muted);font-size:12px}
+.pill{display:inline-block;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700;background:var(--raised);color:var(--muted);white-space:nowrap}
+.pill.pro{background:var(--grad);color:#fff} .pill.bad{background:rgba(255,77,109,.15);color:var(--live)} .pill.ok{background:rgba(52,211,153,.13);color:var(--ok)} .pill.warn{background:rgba(251,191,36,.13);color:var(--warn)}
+.pill.live{background:var(--live);color:#fff;animation:blink 1.6s infinite}
+@keyframes blink{50%{opacity:.6}}
+.tools{display:flex;gap:10px;flex-wrap:wrap}
+.tools .in{width:auto;min-width:220px}
+.empty{padding:40px;text-align:center;color:var(--muted)}
+/* drawer */
+.dr-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);z-index:40;opacity:0;pointer-events:none;transition:.25s}
+.dr-bg.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:var(--side);border-left:1px solid var(--line);z-index:41;transform:translateX(100%);transition:transform .3s;padding:24px;overflow-y:auto}
+.drawer.on{transform:none}
+.drawer .hd{display:flex;gap:14px;align-items:center;margin-bottom:20px}
+.drawer .hd .av{width:64px;height:64px;font-size:22px}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.kv div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
+.kv span{display:block;font-size:11.5px;color:var(--muted)} .kv b{font-size:17px}
+.x{position:absolute;top:18px;right:18px;background:var(--raised);border:1px solid var(--line);border-radius:10px;width:34px;height:34px;cursor:pointer}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+/* push */
+.push{display:grid;grid-template-columns:1fr 340px;gap:18px;align-items:start}
+.push form{display:grid;gap:12px}
+.push label{font-size:12.5px;color:var(--muted);font-weight:600}
+.seg{display:flex;background:var(--raised);border-radius:12px;padding:4px;gap:4px}
+.seg button{flex:1;border:0;background:none;padding:9px;border-radius:9px;cursor:pointer;color:var(--muted);font-weight:600}
+.seg button.on{background:var(--card);color:#fff;box-shadow:0 2px 8px #0006}
+.phone{background:#000;border-radius:34px;padding:12px;border:1px solid var(--line2)}
+.phone .scr{background:linear-gradient(160deg,#2a1f5c,#0d0b24);border-radius:24px;height:360px;padding:40px 12px 12px}
+.ntf{background:rgba(255,255,255,.92);color:#111;border-radius:16px;padding:12px;display:flex;gap:10px}
+.ntf img{width:34px;height:34px;border-radius:9px}
+.ntf b{font-size:13px;display:block} .ntf p{font-size:12.5px;color:#333;margin-top:2px;word-break:break-word}
+.ntf small{font-size:11px;color:#666}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--card);border:1px solid var(--line2);padding:12px 18px;border-radius:12px;z-index:60;transition:.3s;box-shadow:0 20px 40px -10px #000}
+.toast.on{transform:translateX(-50%)}
+.skel{height:120px;border-radius:18px;background:linear-gradient(90deg,var(--card),var(--raised),var(--card));background-size:200% 100%;animation:sk 1.2s infinite}
+@keyframes sk{to{background-position:-200% 0}}
+/* responsive */
+@media (max-width:1100px){.two,.push{grid-template-columns:1fr}}
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  aside{position:fixed;left:0;top:0;width:260px;z-index:45;transform:translateX(-100%);transition:transform .3s}
+  aside.on{transform:none}
+  main{padding:18px 16px 60px}
+  .burger{display:grid;place-items:center;width:40px;height:40px;border-radius:11px;background:var(--card);border:1px solid var(--line);cursor:pointer}
+  .top h1{font-size:21px}
+  .tools .in{min-width:0;flex:1}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="dr-bg" id="drbg"></div><div class="drawer" id="drawer"></div>
+<div class="toast" id="toast"></div>
+<script type="module">
+const PLAN_NAMES = { free: 'Başlangıç', pro: 'Creator', team: 'Ekip' };
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
+const sb = createClient('https://rrcknioeasynsbsmmnwr.supabase.co', 'sb_publishable_yXoivKQXRJM1CACo9RUThw_nO61Pkek');
+const app = document.getElementById('app');
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const dt = (s) => s ? new Date(s).toLocaleString('tr-TR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '—';
+const num = (n) => Number(n ?? 0).toLocaleString('tr-TR');
+const I = {
+  ozet: '<path d="M3 13h8V3H3zm0 8h8v-6H3zm10 0h8V11h-8zm0-18v6h8V3z"/>',
+  canli: '<circle cx="12" cy="12" r="3"/><path d="M16.2 7.8a6 6 0 0 1 0 8.4M7.8 16.2a6 6 0 0 1 0-8.4M19 5a10 10 0 0 1 0 14M5 19A10 10 0 0 1 5 5"/>',
+  kullanicilar: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/>',
+  yayinlar: '<rect x="2" y="6" width="14" height="12" rx="2"/><path d="m22 8-6 4 6 4z"/>',
+  bildirim: '<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/>',
+  sikayet: '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"/>',
+  destek: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+  user: '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  star: '<path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8-6.2-3.2L5.8 21 7 14.2 2 9.3l6.9-1z"/>',
+  clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+  scissors: '<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/>',
+  ban: '<circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/>',
+};
+const svg = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${I[k] ?? ''}</svg>`;
+const avatar = (u) => u?.avatar_url ? `<span class="av"><img src="${esc(u.avatar_url)}" alt="" loading="lazy"></span>` : `<span class="av">${esc((u?.display_name || u?.username || '?')[0].toUpperCase())}</span>`;
+function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('on'), 2600); }
+
+let tab = location.hash.slice(1) || 'ozet', me, counts = {};
+const TABS = { ozet: 'Genel bakış', canli: 'Şu an canlı', kullanicilar: 'Kullanıcılar', yayinlar: 'Yayınlar', bildirim: 'Bildirim gönder', sikayet: 'Şikâyetler', destek: 'Destek' };
+const SUB = { ozet: 'Son 30 günün özeti', canli: 'Açık ve canlı yayınlar — 15 sn\'de bir yenilenir', kullanicilar: 'Ara, incele, paket değiştir, hesap kapat', yayinlar: 'Son 200 yayın', bildirim: 'Kullanıcıların telefonuna push bildirimi gönder', sikayet: 'Kullanıcı şikâyetleri', destek: 'Uygulamadan gelen destek talepleri' };
+
+function loginView(msg = '') {
+  app.innerHTML = `<div class="login-wrap"><form class="login" id="f">
+    <img class="ic" src="/brand/icon.png" alt=""><h1>Yönetim paneli</h1><p class="muted">Rejivio yönetici hesabınla giriş yap</p>
+    <input class="in" id="e" type="email" placeholder="E-posta" autocomplete="username" required>
+    <input class="in" id="p" type="password" placeholder="Şifre" autocomplete="current-password" required>
+    <button class="btn" id="go">Giriş yap</button><div class="err" style="text-align:center">${esc(msg)}</div></form></div>`;
+  document.getElementById('f').onsubmit = async (ev) => {
+    ev.preventDefault(); go.disabled = true;
+    const { error } = await sb.auth.signInWithPassword({ email: e.value.trim(), password: p.value });
+    if (error) return loginView('E-posta ya da şifre hatalı');
+    boot();
+  };
+}
+
+async function boot() {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return loginView();
+  const { data } = await sb.from('profiles').select('id, username, role, avatar_url, display_name').eq('id', user.id).single();
+  if (data?.role !== 'admin') { await sb.auth.signOut(); return loginView('Bu hesabın yönetici yetkisi yok'); }
+  me = data;
+  shell(); go(tab);
+}
+
+function shell() {
+  app.innerHTML = `<div class="app"><aside id="side">
+      <div class="logo"><img src="/brand/wordmark.png" alt="Rejivio"><span>ADMIN</span></div>
+      ${Object.entries(TABS).map(([k, v]) => `<button class="nav-b" data-t="${k}">${svg(k)}${v}<em class="cnt" id="c-${k}" hidden></em></button>`).join('')}
+      <div class="me">${avatar(me)}<div style="min-width:0;flex:1"><b style="display:block;font-size:13px">@${esc(me.username)}</b><a href="#" id="out" class="muted" style="font-size:12px">Çıkış yap</a></div></div>
+    </aside>
+    <main><div class="top"><div style="display:flex;gap:12px;align-items:center"><button class="burger" id="bg" aria-label="Menü">☰</button>
+      <div><h1 id="ttl"></h1><p class="muted" id="sub"></p></div></div><div id="topr"></div></div><div id="body"></div></main></div>`;
+  app.querySelectorAll('.nav-b').forEach((b) => (b.onclick = () => { side.classList.remove('on'); go(b.dataset.t); }));
+  out.onclick = async (ev) => { ev.preventDefault(); await sb.auth.signOut(); loginView(); };
+  bg.onclick = () => side.classList.toggle('on');
+  refreshCounts();
+}
+
+async function refreshCounts() {
+  const [r, t, l] = await Promise.all([
+    sb.from('reports').select('id', { count: 'exact', head: true }).eq('status', 'open'),
+    sb.from('support_tickets').select('id', { count: 'exact', head: true }).eq('status', 'open'),
+    sb.from('sessions').select('id', { count: 'exact', head: true }).eq('status', 'open').not('live_started_at', 'is', null),
+  ]);
+  counts = { sikayet: r.count, destek: t.count, canli: l.count };
+  for (const [k, v] of Object.entries(counts)) { const el = document.getElementById('c-' + k); if (el) { el.hidden = !v; el.textContent = v; } }
+}
+
+let poll;
+async function go(t, arg) {
+  tab = t; history.replaceState(null, '', '#' + t); clearInterval(poll);
+  app.querySelectorAll('.nav-b').forEach((b) => b.classList.toggle('on', b.dataset.t === t));
+  ttl.textContent = TABS[t]; sub.textContent = SUB[t]; topr.innerHTML = '';
+  body.innerHTML = '<div class="kpis"><div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>';
+  try { await views[t](arg); } catch (e) { body.innerHTML = `<div class="panel err">${esc(e.message)}</div>`; }
+  if (t === 'canli') poll = setInterval(() => views.canli(true), 15000);
+}
+
+const kpi = (icon, v, l, hl) => `<div class="kpi ${hl ? 'hl' : ''}"><div class="ico">${svg(icon)}</div><b>${v}</b><span>${l}</span></div>`;
+
+const views = {
+  async ozet() {
+    const [{ data: s, error }, { data: daily }] = await Promise.all([sb.rpc('admin_stats', { days: 30 }), sb.rpc('admin_daily', { days: 30 })]);
+    if (error) throw error;
+    const f = s.funnel || {};
+    const steps = [['signup', 'Kayıt oldu'], ['onboarded', 'Profilini kurdu'], ['session_create', 'Yayın açtı'], ['guest_join', 'Konuk olarak katıldı'], ['go_live', 'Canlıya çıktı'], ['upgrade_pro', "Pro'ya geçti"]];
+    const fmax = Math.max(1, ...steps.map(([k]) => f[k] || 0));
+    const d = daily || [];
+    const dmax = Math.max(1, ...d.map((x) => Math.max(x.signups, x.sessions)));
+    body.innerHTML = `<div class="kpis">
+        ${kpi('kullanicilar', num(s.users), 'Toplam kullanıcı', true)}${kpi('user', num(s.users_new), 'Yeni kullanıcı (30 gün)')}
+        ${kpi('star', num(s.pro), 'Ücretli paket' + (s.team != null ? ` · ${num(s.team)} Ekip` : ''))}${kpi('yayinlar', num(s.sessions), 'Yayın (30 gün)')}
+        ${kpi('clock', num(s.live_minutes), 'Canlı dakika (30 gün)')}${kpi('canli', num(s.guests), 'Katılan konuk')}
+        ${kpi('scissors', num(s.clips), 'Klip')}${kpi('ban', num(s.banned), 'Kapatılan hesap')}</div>
+      <div class="two">
+        <div class="panel"><div class="panel-h"><div><h3>Günlük hareket</h3><p class="muted">Son 30 gün</p></div>
+          <div class="legend"><span><i style="background:var(--grad)"></i>Yeni kullanıcı</span><span><i style="background:rgba(155,61,255,.35)"></i>Açılan yayın</span></div></div>
+          <div class="chart">${d.map((x) => `<div class="c" data-t="${new Date(x.d).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' })}\nKullanıcı: ${x.signups}\nYayın: ${x.sessions}\nCanlı: ${x.live}">
+            <i class="b" style="height:${(x.sessions / dmax) * 100}%"></i><i class="a" style="height:${(x.signups / dmax) * 100}%"></i></div>`).join('')}</div>
+          <div class="xl"><span>${d[0] ? new Date(d[0].d).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' }) : ''}</span><span>Bugün</span></div></div>
+        <div class="panel"><h3>Dönüşüm hunisi</h3><p class="muted" style="margin-bottom:16px">30 gün, kişi sayısı</p><div class="fn">
+          ${steps.map(([k, l]) => `<div class="r"><span>${l}</span><b>${num(f[k] || 0)}</b><div class="bar"><i style="width:${((f[k] || 0) / fmax) * 100}%"></i></div></div>`).join('')}</div></div>
+      </div>
+      <div class="two">
+        <div class="panel"><div class="panel-h"><h3>Son kayıt olanlar</h3><button class="btn sm ghost" data-go="kullanicilar">Tümü →</button></div><div id="recent" class="muted">…</div></div>
+        <div class="panel"><h3>Bekleyen işler</h3><div class="fn" style="margin-top:14px">
+          <div class="r"><span>Açık şikâyet</span><b>${num(s.open_reports)}</b></div><div class="r"><span>Açık destek talebi</span><b>${num(s.open_tickets)}</b></div>
+          <div class="r"><span>Şu an canlı yayın</span><b>${num(counts.canli)}</b></div></div></div>
+      </div>`;
+    body.querySelectorAll('[data-go]').forEach((b) => (b.onclick = () => go(b.dataset.go)));
+    const { data: rec } = await sb.from('profiles').select('id, username, display_name, avatar_url, plan, created_at').order('created_at', { ascending: false }).limit(6);
+    recent.innerHTML = (rec ?? []).map((u) => `<div class="u" style="padding:8px 0;border-top:1px solid var(--line);cursor:pointer" data-u="${u.id}">${avatar(u)}<div style="flex:1"><b>${esc(u.display_name || '@' + u.username)}</b><small>@${esc(u.username)} · ${dt(u.created_at)}</small></div>${u.plan !== 'free' ? `<span class="pill pro">${PLAN_NAMES[u.plan]}</span>` : ''}</div>`).join('') || '<div class="empty">Henüz kullanıcı yok</div>';
+    recent.querySelectorAll('[data-u]').forEach((r) => (r.onclick = () => openUser(r.dataset.u)));
+  },
+
+  async canli(silent) {
+    const { data, error } = await sb.from('sessions').select('id, title, join_code, created_at, live_started_at, profiles(username, display_name, avatar_url), invites(count)').eq('status', 'open').order('live_started_at', { ascending: false, nullsFirst: false }).limit(100);
+    if (error) throw error;
+    refreshCounts();
+    if (!data.length) { body.innerHTML = '<div class="panel empty">Şu an açık yayın yok.</div>'; return; }
+    body.innerHTML = `<div class="kpis">${data.map((s) => `<div class="kpi ${s.live_started_at ? 'hl' : ''}">
+      <div class="u" style="margin-bottom:12px">${avatar(s.profiles)}<div style="min-width:0"><b style="font-size:14px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.title)}</b><small class="muted">@${esc(s.profiles?.username)}</small></div></div>
+      ${s.live_started_at ? '<span class="pill live">● CANLI</span>' : '<span class="pill ok">PROVA</span>'} <span class="pill">${esc(s.join_code)}</span>
+      <p class="muted" style="margin-top:10px;font-size:12.5px">${s.invites?.[0]?.count ?? 0} konuk · ${s.live_started_at ? 'canlı ' + dt(s.live_started_at) : 'açıldı ' + dt(s.created_at)}</p></div>`).join('')}</div>`;
+  },
+
+  async kullanicilar() {
+    topr.innerHTML = `<div class="tools"><input class="in" id="q" placeholder="Kullanıcı adı ya da ad ara…"><select class="in" id="fl" style="min-width:0"><option value="">Hepsi</option><option value="pro">Pro</option><option value="free">Ücretsiz</option><option value="banned">Kapalı</option><option value="new">Profil kurmamış</option></select></div>`;
+    let rows = [];
+    const draw = () => {
+      const s = q.value.trim().toLowerCase(), f = fl.value;
+      const list = rows.filter((u) => (!s || u.username.includes(s) || (u.display_name || '').toLowerCase().includes(s))
+        && (!f || (f === 'banned' ? u.banned_at : f === 'new' ? !u.onboarded_at : u.plan === f && !u.banned_at)));
+      body.innerHTML = `<div class="panel"><div class="panel-h"><h3>${num(list.length)} kullanıcı</h3></div><div class="tbl"><table><thead><tr><th>Kullanıcı</th><th>Paket</th><th>Durum</th><th>Profil</th><th>Kayıt</th></tr></thead><tbody>
+        ${list.map((u) => `<tr class="click" data-u="${u.id}"><td><div class="u">${avatar(u)}<div><b>${esc(u.display_name || '@' + u.username)}</b>${u.role === 'admin' ? ' <span class="pill warn">YÖNETİCİ</span>' : ''}<small>@${esc(u.username)}</small></div></div></td>
+          <td><span class="pill ${u.plan !== 'free' ? 'pro' : ''}">${PLAN_NAMES[u.plan] ?? u.plan}</span></td>
+          <td>${u.banned_at ? '<span class="pill bad">KAPALI</span>' : '<span class="pill ok">AKTİF</span>'}</td>
+          <td>${u.onboarded_at ? '<span class="pill ok">TAMAM</span>' : '<span class="pill warn">EKSİK</span>'}</td>
+          <td class="muted">${dt(u.created_at)}</td></tr>`).join('') || '<tr><td colspan="5" class="empty">Sonuç yok</td></tr>'}</tbody></table></div></div>`;
+      body.querySelectorAll('[data-u]').forEach((r) => (r.onclick = () => openUser(r.dataset.u)));
+    };
+    const { data, error } = await sb.from('profiles').select('id, username, display_name, avatar_url, plan, pro_until, banned_at, role, onboarded_at, created_at').order('created_at', { ascending: false }).limit(1000);
+    if (error) throw error;
+    rows = data; draw();
+    q.oninput = draw; fl.onchange = draw;
+  },
+
+  async yayinlar() {
+    const { data, error } = await sb.from('sessions').select('id, title, status, join_code, created_at, ended_at, live_started_at, profiles(username, avatar_url, display_name), invites(count)').order('created_at', { ascending: false }).limit(200);
+    if (error) throw error;
+    body.innerHTML = `<div class="panel"><div class="tbl"><table><thead><tr><th>Yayın</th><th>Yayıncı</th><th>Kod</th><th>Konuk</th><th>Durum</th><th>Açılış</th><th>Bitiş</th></tr></thead><tbody>
+      ${data.map((s) => `<tr><td><b>${esc(s.title)}</b></td><td><div class="u">${avatar(s.profiles)}@${esc(s.profiles?.username)}</div></td><td><span class="pill">${esc(s.join_code)}</span></td><td>${s.invites?.[0]?.count ?? 0}</td>
+        <td>${s.status === 'open' && s.live_started_at ? '<span class="pill live">CANLI</span>' : s.status === 'open' ? '<span class="pill ok">AÇIK</span>' : '<span class="pill">BİTTİ</span>'}</td>
+        <td class="muted">${dt(s.created_at)}</td><td class="muted">${dt(s.ended_at)}</td></tr>`).join('') || '<tr><td colspan="7" class="empty">Yayın yok</td></tr>'}</tbody></table></div></div>`;
+  },
+
+  async bildirim(pre) {
+    const { count } = await sb.from('push_tokens').select('token', { count: 'exact', head: true });
+    let target = pre ? 'one' : 'all', uid = pre?.id ?? null;
+    body.innerHTML = `<div class="push"><div class="panel"><form id="pf">
+        <label>Alıcı</label><div class="seg"><button type="button" data-tg="all">Herkes (${num(count)} cihaz)</button><button type="button" data-tg="one">Tek kullanıcı</button></div>
+        <div id="one" hidden><input class="in" id="uq" placeholder="Kullanıcı adı yaz…" value="${pre ? esc(pre.username) : ''}" autocomplete="off"><div id="ures" class="muted" style="margin-top:6px;font-size:12.5px"></div></div>
+        <label for="pt">Başlık</label><input class="in" id="pt" maxlength="80" placeholder="ör. Bu akşam büyük yayın 🎉" required>
+        <label for="pb">Metin</label><textarea class="in" id="pb" rows="4" maxlength="240" placeholder="ör. Saat 21:00'de canlıdayız, kodu kaçırma!" required></textarea>
+        <button class="btn" id="send">${svg('bildirim').replace('<svg', '<svg width="18" height="18"')} Gönder</button><p class="muted" style="font-size:12.5px">Yalnızca bildirim iznini açmış kullanıcılara ulaşır.</p>
+      </form></div>
+      <div><div class="phone"><div class="scr"><div class="ntf"><img src="/brand/icon.png" alt=""><div style="min-width:0;flex:1"><small>Rejivio · şimdi</small><b id="vt">Başlık</b><p id="vb">Bildirim metni burada görünür.</p></div></div></div></div></div></div>`;
+    const setT = (t) => { target = t; pf.querySelectorAll('[data-tg]').forEach((b) => b.classList.toggle('on', b.dataset.tg === t)); one.hidden = t !== 'one'; };
+    pf.querySelectorAll('[data-tg]').forEach((b) => (b.onclick = () => setT(b.dataset.tg))); setT(target);
+    pt.oninput = () => (vt.textContent = pt.value || 'Başlık'); pb.oninput = () => (vb.textContent = pb.value || 'Bildirim metni burada görünür.');
+    const look = async () => {
+      const v = uq.value.trim().replace(/^@/, '').toLowerCase(); uid = null;
+      if (v.length < 2) { ures.textContent = ''; return; }
+      const { data } = await sb.from('profiles').select('id, username').eq('username', v).maybeSingle();
+      if (!data) { ures.textContent = 'Bu kullanıcı bulunamadı'; return; }
+      const { count: c } = await sb.from('push_tokens').select('token', { count: 'exact', head: true }).eq('user_id', data.id);
+      uid = data.id; ures.textContent = `@${data.username} · ${c ?? 0} kayıtlı cihaz`;
+    };
+    uq.oninput = look; if (pre) look();
+    pf.onsubmit = async (ev) => {
+      ev.preventDefault();
+      if (target === 'one' && !uid) return toast('Önce geçerli bir kullanıcı seç');
+      if (target === 'all' && !confirm(`Bildirim ${count} cihaza gidecek. Emin misin?`)) return;
+      send.disabled = true;
+      const { data, error } = await sb.functions.invoke('admin-push', { body: { title: pt.value, body: pb.value, ...(target === 'all' ? { all: true } : { userId: uid }) } });
+      send.disabled = false;
+      if (error) return toast('Gönderilemedi: ' + error.message);
+      toast(data.sent ? `Gönderildi: ${data.fcm + (data.expo || 0)} cihaz${data.fcmFailed ? ` · ${data.fcmFailed} başarısız` : ''}` : (data.note || 'Alıcı cihaz yok'));
+    };
+  },
+
+  async sikayet() {
+    const { data, error } = await sb.from('reports').select('id, reason, status, created_at, reporter:profiles!reports_reporter_id_fkey(username), reported:profiles!reports_reported_id_fkey(id, username, avatar_url, display_name), sessions(title)').order('created_at', { ascending: false }).limit(200);
+    if (error) throw error;
+    body.innerHTML = `<div class="panel"><div class="tbl"><table><thead><tr><th>Tarih</th><th>Şikâyet edilen</th><th>Şikâyet eden</th><th>Yayın</th><th>Sebep</th><th>Durum</th><th></th></tr></thead><tbody>
+      ${data.map((r) => `<tr><td class="muted">${dt(r.created_at)}</td><td>${r.reported ? `<div class="u click" data-u="${r.reported.id}" style="cursor:pointer">${avatar(r.reported)}@${esc(r.reported.username)}</div>` : '—'}</td><td>@${esc(r.reporter?.username)}</td><td>${esc(r.sessions?.title ?? '—')}</td>
+        <td>${esc(r.reason)}</td><td><span class="pill ${r.status === 'open' ? 'bad' : 'ok'}">${r.status === 'open' ? 'AÇIK' : 'KAPANDI'}</span></td>
+        <td>${r.status === 'open' ? `<button class="btn sm ghost" data-rep="${r.id}">Kapat</button>` : ''}</td></tr>`).join('') || '<tr><td colspan="7" class="empty">Şikâyet yok 🎉</td></tr>'}</tbody></table></div></div>`;
+    body.querySelectorAll('[data-rep]').forEach((b) => (b.onclick = async () => { await sb.from('reports').update({ status: 'closed' }).eq('id', b.dataset.rep); toast('Şikâyet kapatıldı'); refreshCounts(); views.sikayet(); }));
+    body.querySelectorAll('[data-u]').forEach((r) => (r.onclick = () => openUser(r.dataset.u)));
+  },
+
+  async destek() {
+    const { data, error } = await sb.from('support_tickets').select('id, message, device, status, created_at, profiles(id, username, avatar_url, display_name)').order('created_at', { ascending: false }).limit(200);
+    if (error) throw error;
+    body.innerHTML = data.length ? data.map((t) => `<div class="panel"><div class="panel-h"><div class="u">${avatar(t.profiles)}<div><b>@${esc(t.profiles?.username)}</b><small>${dt(t.created_at)} · ${esc(t.device)}</small></div></div>
+        <div style="display:flex;gap:8px;align-items:center"><span class="pill ${t.status === 'open' ? 'bad' : 'ok'}">${t.status === 'open' ? 'AÇIK' : 'KAPANDI'}</span>${t.status === 'open' ? `<button class="btn sm ghost" data-tk="${t.id}">Çözüldü</button>` : ''}</div></div>
+        <p style="white-space:pre-wrap">${esc(t.message)}</p></div>`).join('') : '<div class="panel empty">Destek talebi yok 🎉</div>';
+    body.querySelectorAll('[data-tk]').forEach((b) => (b.onclick = async () => { await sb.from('support_tickets').update({ status: 'closed' }).eq('id', b.dataset.tk); toast('Talep kapatıldı'); refreshCounts(); views.destek(); }));
+  },
+};
+
+async function openUser(id) {
+  const [{ data: u }, { data: d }] = await Promise.all([
+    sb.from('profiles').select('id, username, display_name, avatar_url, bio, plan, pro_until, banned_at, role, birth_year, terms_accepted_at, onboarded_at, created_at, locale').eq('id', id).single(),
+    sb.rpc('admin_user_detail', { uid: id }),
+  ]);
+  if (!u) return;
+  drawer.innerHTML = `<button class="x" id="dx" aria-label="Kapat">✕</button>
+    <div class="hd">${avatar(u)}<div><h2 style="font-size:19px">${esc(u.display_name || '@' + u.username)}</h2><p class="muted">@${esc(u.username)}</p>
+      <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap"><span class="pill ${u.plan !== 'free' ? 'pro' : ''}">${PLAN_NAMES[u.plan] ?? u.plan}</span>${u.banned_at ? '<span class="pill bad">KAPALI</span>' : '<span class="pill ok">AKTİF</span>'}${u.role === 'admin' ? '<span class="pill warn">YÖNETİCİ</span>' : ''}</div></div></div>
+    ${u.bio ? `<p style="margin-bottom:10px">${esc(u.bio)}</p>` : ''}
+    <div class="kv"><div><span>Yayın açtı</span><b>${num(d?.sessions)}</b></div><div><span>Konuk oldu</span><b>${num(d?.guest_of)}</b></div>
+      <div><span>Takipçi</span><b>${num(d?.followers)}</b></div><div><span>Bildirim cihazı</span><b>${num(d?.devices)}</b></div>
+      <div><span>Hakkında şikâyet</span><b>${num(d?.reports_against)}</b></div><div><span>Giriş yöntemi</span><b style="font-size:14px">${esc(d?.provider ?? '—')}</b></div></div>
+    <table style="min-width:0"><tbody>
+      <tr><td class="muted">E-posta</td><td>${esc(d?.email ?? '—')}</td></tr>
+      <tr><td class="muted">Kayıt</td><td>${dt(u.created_at)}</td></tr>
+      <tr><td class="muted">Son giriş</td><td>${dt(d?.last_sign_in)}</td></tr>
+      <tr><td class="muted">Doğum yılı</td><td>${u.birth_year ?? '—'}</td></tr>
+      <tr><td class="muted">Koşul onayı</td><td>${dt(u.terms_accepted_at)}</td></tr>
+      <tr><td class="muted">Profil kurulumu</td><td>${u.onboarded_at ? dt(u.onboarded_at) : '<span class="pill warn">EKSİK</span>'}</td></tr>
+      ${u.pro_until ? `<tr><td class="muted">Pro bitiş</td><td>${dt(u.pro_until)}</td></tr>` : ''}
+    </tbody></table>
+    ${u.role === 'admin' ? '' : `<div class="acts">
+      <select class="btn sm ghost" id="dp" title="Paket">${['free', 'pro', 'team'].map((p) => `<option value="${p}"${u.plan === p ? ' selected' : ''}>${PLAN_NAMES[p]}</option>`).join('')}</select>
+      <button class="btn sm ghost" id="dn">Bildirim gönder</button>
+      <button class="btn sm ${u.banned_at ? 'ghost' : 'danger'}" id="db">${u.banned_at ? 'Hesabı aç' : 'Hesabı kapat'}</button></div>`}`;
+  drawer.classList.add('on'); drbg.classList.add('on');
+  dx.onclick = closeUser;
+  if (u.role !== 'admin') {
+    dp.onchange = async () => { const { error } = await sb.rpc('admin_set_user', { uid: id, ban: !!u.banned_at, new_plan: dp.value }); error ? toast(error.message) : (toast('Paket güncellendi'), openUser(id), tab === 'kullanicilar' && views.kullanicilar()); };
+    db.onclick = async () => {
+      if (!confirm(u.banned_at ? 'Hesap açılsın mı?' : 'Hesap kapatılsın mı? Kullanıcı yayınlara giremez.')) return;
+      const { error } = await sb.rpc('admin_set_user', { uid: id, ban: !u.banned_at }); error ? toast(error.message) : (toast(u.banned_at ? 'Hesap açıldı' : 'Hesap kapatıldı'), openUser(id), tab === 'kullanicilar' && views.kullanicilar());
+    };
+    dn.onclick = () => { closeUser(); go('bildirim', u); };
+  }
+}
+function closeUser() { drawer.classList.remove('on'); drbg.classList.remove('on'); }
+drbg.onclick = closeUser;
+addEventListener('keydown', (e) => e.key === 'Escape' && closeUser());
+
+boot();
+</script>
+</body>
+</html>

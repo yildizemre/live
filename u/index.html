@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="tr" translate="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google" content="notranslate">
+<title>Rejivio</title>
+<meta property="og:title" content="Rejivio yayıncı profili">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #0b0c14; --card: #141625; --raised: #1d2034; --line: rgba(255,255,255,.1); --text: #f5f6fc; --muted: #9297b0; --violet: #8e4ff0; --pink: #e3609a; --live: #ff4d5e; }
+  * { box-sizing: border-box; }
+  body { margin: 0; color: var(--text); font-family: Inter, system-ui, sans-serif; background: radial-gradient(circle at 20% 0%, rgba(79,91,240,.3), transparent 45%), var(--bg); min-height: 100vh; }
+  main { max-width: 760px; margin: 0 auto; padding: 22px 16px 60px; }
+  header { display: flex; justify-content: space-between; align-items: center; } header img { height: 30px; }
+  .hero { margin-top: 26px; display: flex; gap: 16px; align-items: center; }
+  .av { width: 76px; height: 76px; border-radius: 50%; background: linear-gradient(135deg, #4f5bf0, var(--violet), var(--pink)); display: grid; place-items: center; font: 800 32px Inter; flex: none; }
+  h1 { margin: 0; font-size: 28px; letter-spacing: -.02em; }
+  .muted { color: var(--muted); } .pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font: 800 11px Inter; letter-spacing: .08em; background: var(--raised); color: var(--muted); }
+  .pill.pro { background: linear-gradient(90deg, var(--violet), var(--pink)); color: #fff; } .pill.live { background: var(--live); color: #fff; }
+  .btn { display: inline-block; padding: 13px 18px; border-radius: 14px; color: #fff; font: 700 15px Inter; text-decoration: none; background: linear-gradient(90deg, #4f5bf0, var(--violet), var(--pink)); }
+  .btn.ghost { background: transparent; border: 1px solid rgba(255,255,255,.2); }
+  h2 { font-size: 18px; margin: 30px 0 10px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 16px; margin-top: 10px; }
+  .liveb { border-color: var(--live); display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 12px; }
+  video { width: 100%; border-radius: 12px; background: #000; aspect-ratio: 9/16; max-height: 420px; }
+  .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .empty { color: var(--muted); }
+  #nf { text-align: center; margin-top: 80px; }
+</style>
+</head>
+<body>
+<main>
+  <header><a href="/"><img src="/brand/watermark.png" alt="Rejivio"></a><span class="muted" style="font-size:13px">Yayıncı profili</span></header>
+  <div id="app" class="muted" style="margin-top:40px">Yükleniyor…</div>
+</main>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const sb = createClient('https://rrcknioeasynsbsmmnwr.supabase.co', 'sb_publishable_yXoivKQXRJM1CACo9RUThw_nO61Pkek', { auth: { persistSession: false } });
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const dt = (s, o = { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }) => new Date(s).toLocaleString('tr-TR', o);
+const dur = (a, b) => { const s = Math.round((new Date(b) - new Date(a)) / 1000); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
+
+const uname = decodeURIComponent((location.pathname.split('/u/')[1] || '').replace(/\/.*/, '')).replace(/^@/, '');
+const app = document.getElementById('app');
+const { data: p } = uname ? await sb.rpc('public_profile', { uname }) : { data: null };
+
+if (!p) {
+  app.innerHTML = `<div id="nf"><h1>Profil bulunamadı</h1><p>@${esc(uname)} adında bir yayıncı yok.</p></div>`;
+} else {
+  document.title = `@${p.username} · Rejivio`;
+  const clips = p.past.flatMap((s) => s.clips.map((c) => ({ ...c, session: s.title })));
+  app.innerHTML = `
+    <div class="hero"><div class="av">${esc(p.username[0].toUpperCase())}</div>
+      <div><h1>@${esc(p.username)}</h1>
+        <div style="margin-top:6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          ${p.pro ? '<span class="pill pro">PRO</span>' : ''}<span class="muted">${p.followers} takipçi</span></div></div></div>
+    <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+      <a class="btn" href="hypelive://u/${esc(p.username)}">Uygulamada takip et</a>
+      <a class="btn ghost" href="https://expo.dev/artifacts/eas/SukRIAlrNeEE_ayUfZnL0w81ly73p5NYXXJ6JtdC6Ik.apk">Uygulamayı indir</a></div>
+
+    ${p.live ? `<div class="card liveb"><div><span class="pill live">● CANLI</span> <b style="margin-left:6px">${esc(p.live.title)}</b>
+      <div class="muted" style="margin-top:6px">Şu an yayında — kameranla katılabilirsin</div></div>
+      <a class="btn" href="/k/${esc(p.live.code)}">Yayına katıl</a></div>` : ''}
+
+    <h2>Yaklaşan yayınlar</h2>
+    ${p.upcoming.length ? p.upcoming.map((u) => `<div class="card row"><b>${esc(u.title)}</b><span class="muted">${dt(u.starts_at, { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}</span></div>`).join('')
+      : '<p class="empty">Planlanmış yayın yok.</p>'}
+
+    <h2>Yayın tekrarları ve klipler</h2>
+    ${clips.length ? `<div class="grid">${clips.map((c) => `<div class="card" style="margin:0">
+        <video src="${esc(c.url)}" controls preload="metadata" playsinline></video>
+        <div class="row" style="margin-top:8px"><b>${c.kind === 'clip' ? 'Klip' : 'Yayın kaydı'}</b><span class="muted">${dur(c.started_at, c.ended_at)}</span></div>
+        <div class="muted" style="font-size:13px">${esc(c.session)} · ${dt(c.started_at, { day: 'numeric', month: 'short' })}</div>
+        <button class="btn ghost" style="margin-top:8px;width:100%" onclick="navigator.share ? navigator.share({ title: 'Rejivio klip', url: '${esc(c.url)}' }) : navigator.clipboard.writeText('${esc(c.url)}')">Paylaş</button></div>`).join('')}</div>`
+      : '<p class="empty">Henüz klip yok.</p>'}
+
+    <h2>Geçmiş yayınlar</h2>
+    ${p.past.length ? p.past.map((s) => `<div class="card row"><b>${esc(s.title)}</b><span class="muted">${dt(s.created_at, { day: 'numeric', month: 'long' })}</span></div>`).join('')
+      : '<p class="empty">Henüz yayın yok.</p>'}`;
+}
+</script>
+</body>
+</html>

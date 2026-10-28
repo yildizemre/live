@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="tr" translate="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google" content="notranslate">
+<meta name="robots" content="noindex">
+<title>Rejivio Yönetmen</title>
+<link rel="icon" href="/brand/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07061a;--card:#110f2c;--raised:#1a1740;--line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.15);--text:#f3f1ff;--muted:#9a96c0;
+  --violet:#9b3dff;--pink:#e63ce0;--ok:#34d399;--warn:#fbbf24;--live:#ff4d6d;--grad:linear-gradient(120deg,#9b3dff,#e63ce0 55%,#ff6a6a)}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--text);font:500 14px 'Plus Jakarta Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
+button,input,select{font:inherit;color:inherit}
+.muted{color:var(--muted)} .small{font-size:12px}
+.btn{border:0;border-radius:12px;padding:10px 14px;background:var(--raised);cursor:pointer;font-weight:700;display:inline-flex;align-items:center;gap:6px;justify-content:center}
+.btn:hover{filter:brightness(1.15)} .btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.pri{background:var(--grad)} .btn.live{background:var(--live)} .btn.on{background:var(--violet)} .btn.sm{padding:6px 10px;font-size:12px;border-radius:9px}
+.btn.cut{background:var(--live);font-size:18px;padding:16px;width:100%;letter-spacing:.5px;box-shadow:0 0 0 3px rgba(255,77,109,.25)}
+input,select{background:var(--raised);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%;outline:none}
+input:focus,select:focus{border-color:var(--violet)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+.pill{display:inline-block;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:800;background:var(--raised)}
+.pill.live{background:var(--live)} .pill.ok{background:rgba(52,211,153,.18);color:var(--ok)} .pill.warn{background:rgba(251,191,36,.16);color:var(--warn)}
+/* giriş ve yayın seçimi */
+.center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+.box{width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px}
+.box h1{font-size:24px} .box img{width:56px;height:56px;border-radius:14px}
+.err{color:var(--live);font-size:13px;min-height:16px}
+.list{display:flex;flex-direction:column;gap:8px}
+.list button{text-align:left;width:100%;justify-content:space-between}
+/* stüdyo */
+.top{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;flex-wrap:wrap}
+.top h2{font-size:16px;flex:1;min-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.studio{display:grid;grid-template-columns:1fr 340px;gap:16px;padding:16px 18px;align-items:start}
+@media (max-width:900px){.studio{grid-template-columns:1fr}}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.tile{position:relative;aspect-ratio:9/12;border-radius:16px;overflow:hidden;background:#000;border:3px solid var(--line);cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.tile video{width:100%;height:100%;object-fit:cover;display:block}
+.tile.p1{border-color:var(--live)} .tile.p2{border-color:var(--violet)}
+.tile.speak{box-shadow:0 0 0 3px rgba(52,211,153,.8)}
+.tile .tl{position:absolute;top:8px;left:8px;right:8px;display:flex;justify-content:space-between;gap:6px}
+.tile .key{background:rgba(0,0,0,.6);border-radius:7px;padding:2px 7px;font-weight:800;font-size:12px}
+.tile .bl{position:absolute;left:8px;right:8px;bottom:8px;display:flex;flex-direction:column;gap:5px}
+.tile .name{font-weight:800;text-shadow:0 1px 4px #000}
+.tile .badges{display:flex;gap:8px;align-items:center;background:rgba(0,0,0,.55);border-radius:9px;padding:4px 8px;font-size:11px;font-weight:700}
+.tile .second{position:absolute;right:8px;bottom:62px}
+.side{display:flex;flex-direction:column;gap:12px}
+.side h3{font-size:13px;letter-spacing:.4px;color:var(--muted);margin-bottom:8px}
+.row{display:flex;gap:8px;align-items:center}
+.seg{display:flex;background:var(--raised);border-radius:11px;padding:3px;gap:3px}
+.seg button{flex:1;border:0;background:transparent;border-radius:8px;padding:7px 6px;cursor:pointer;font-weight:700;font-size:12px;color:var(--muted)}
+.seg button.on{background:var(--violet);color:#fff}
+.stack{display:flex;flex-direction:column;gap:8px}
+.chk{display:flex;align-items:center;gap:8px;cursor:pointer} .chk input{width:auto}
+.suggest{border-color:var(--violet);display:flex;gap:10px;align-items:center}
+.empty{border:1px dashed var(--line2);border-radius:16px;padding:30px;text-align:center;color:var(--muted)}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--raised);border:1px solid var(--line2);padding:10px 16px;border-radius:12px;transition:transform .25s;z-index:20}
+#toast.on{transform:translateX(-50%) translateY(0)}
+/* telefon: kameralar iki sütun */
+@media (max-width:520px){.studio{padding:12px 16px}.grid{grid-template-columns:repeat(2,1fr);gap:8px}.tile .badges{flex-wrap:wrap;gap:4px}.tile .second{bottom:74px}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast"></div>
+<script type="module">
+// Web yönetmen paneli: yayıncı tarayıcıdan kameraları görür ve yönetir.
+// Komutlar yayıncının telefonuna veri mesajıyla gider (tek doğru kaynak telefon); yayın başlat/kes doğrudan sunucuya gider.
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
+import { Room, RoomEvent, Track, ConnectionQuality } from 'https://cdn.jsdelivr.net/npm/livekit-client@2.22.3/+esm';
+
+const sb = createClient('https://rrcknioeasynsbsmmnwr.supabase.co', 'sb_publishable_yXoivKQXRJM1CACo9RUThw_nO61Pkek');
+const app = document.getElementById('app');
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const $ = (s) => document.querySelector(s);
+function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('on'), 2800); }
+async function call(fn, body) {
+  const { data, error } = await sb.functions.invoke(fn, { body });
+  if (error) { const b = await error.context?.json?.().catch(() => null); throw new Error((b?.error ?? error.message).replace(/^PLAN_LIMIT:\s*/, '')); }
+  if (data?.error) throw new Error(String(data.error).replace(/^PLAN_LIMIT:\s*/, ''));
+  return data;
+}
+const LABEL = { youtube: 'YouTube', instagram: 'Instagram', tiktok: 'TikTok', facebook: 'Facebook', x: 'X', linkedin: 'LinkedIn', custom: 'Diğer RTMP' };
+
+// ---------- giriş ----------
+function loginView(msg = '') {
+  app.innerHTML = `<div class="center"><form class="box" id="f">
+    <img src="/brand/icon.png" alt=""><h1>Yönetmen paneli</h1>
+    <p class="muted">Yayını telefondan açtığın hesapla giriş yap. Kameraları buradan yönetebilirsin.</p>
+    <input id="e" type="email" placeholder="E-posta" autocomplete="username" required>
+    <input id="p" type="password" placeholder="Şifre" autocomplete="current-password" required>
+    <div class="err">${esc(msg)}</div>
+    <button class="btn pri" type="submit">Giriş yap</button></form></div>`;
+  $('#f').onsubmit = async (ev) => {
+    ev.preventDefault();
+    const { error } = await sb.auth.signInWithPassword({ email: $('#e').value.trim(), password: $('#p').value });
+    error ? loginView('E-posta ya da şifre hatalı') : pickView();
+  };
+}
+
+// ---------- yayın seçimi ----------
+async function pickView() {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return loginView();
+  app.innerHTML = `<div class="center"><div class="box"><h1>Açık yayınların</h1><div class="list" id="l"><span class="muted">Yükleniyor…</span></div>
+    <button class="btn sm" id="r">Yenile</button><button class="btn sm" id="o">Çıkış</button></div></div>`;
+  $('#r').onclick = pickView;
+  $('#o').onclick = async () => { await sb.auth.signOut(); loginView(); };
+  const { data } = await sb.from('sessions').select('id, title, created_at, live_started_at').eq('host_id', user.id).eq('status', 'open').order('created_at', { ascending: false });
+  const l = $('#l');
+  if (!data?.length) { l.innerHTML = '<div class="empty">Açık yayın yok. Önce telefondan yayını aç, sonra yenile.</div>'; return; }
+  l.innerHTML = data.map((s) => `<button class="btn" data-id="${s.id}"><span>${esc(s.title)}</span>${s.live_started_at ? '<span class="pill live">CANLI</span>' : '<span class="pill">HAZIR</span>'}</button>`).join('');
+  l.querySelectorAll('button').forEach((b) => b.onclick = () => studio(data.find((s) => s.id === b.dataset.id), user));
+}
+
+// ---------- stüdyo ----------
+async function studio(session, user) {
+  app.innerHTML = '<div class="center"><span class="muted">Yayına bağlanılıyor…</span></div>';
+  let conn;
+  try { conn = await call('livekit-token', { sessionId: session.id, as: 'director' }); }
+  catch (e) { toast(e.message); return pickView(); }
+
+  const room = new Room({ adaptiveStream: true, dynacast: false });
+  const st = { speakers: new Set(), suggestion: null, since: null, targets: [], team: false, delaySel: 10, liveDelay: 0, busy: '' };
+  const videos = new Map();   // identity → <video>
+
+  const host = () => [...room.remoteParticipants.values()].find((p) => { try { return JSON.parse(p.metadata || '{}').role === 'host'; } catch { return false; } });
+  const overlay = () => { try { return JSON.parse(host()?.attributes?.overlay || '{}'); } catch { return {}; } };
+  const programId = () => host()?.attributes?.program || host()?.identity;
+  const liveAt = () => host()?.attributes?.live || '';
+  const cams = () => [...room.remoteParticipants.values()].filter((p) => [...p.trackPublications.values()].some((t) => t.source === Track.Source.Camera && t.track));
+
+  // Komut telefona (yalnızca yayıncıya) gider; telefon uygular ve herkese yayar
+  const cmd = (m) => {
+    const h = host();
+    if (!h) return toast('Yayıncının telefonu bağlı değil');
+    room.localParticipant.publishData(new TextEncoder().encode(JSON.stringify(m)), { reliable: true, topic: 'director', destinationIdentities: [h.identity] });
+  };
+
+  app.innerHTML = `
+    <div class="top"><h2>${esc(session.title)}</h2><span id="status" class="pill">…</span>
+      <span class="muted small">Kısayol: 1–9 kamera, H highlight</span><button class="btn sm" id="camlink" title="Bilgisayar kamerası ya da capture kartı bu linkle yayına kamera olarak katılır">🎥 Webcam linki</button><button class="btn sm" id="leave">Çık</button></div>
+    <div class="studio"><div class="stack"><div id="sug"></div><div class="grid" id="grid"></div></div>
+    <div class="side">
+      <div class="card"><h3>YAYIN</h3><div id="bc" class="stack"></div></div>
+      <div class="card"><h3>EKRAN</h3><div class="stack">
+        <div class="seg" id="layout"><button data-v="single">▢ Tek ekran</button><button data-v="split">◫ Bölünmüş</button></div>
+        <div class="seg" id="scene"><button data-v="live">● Canlı</button><button data-v="brb">☕ Kısa ara</button></div>
+        <button class="btn" id="hl">⭐ Anı işaretle</button>
+        <div class="row"><button class="btn" id="autoOn" style="flex:1">▶ Otomatik yönetmen</button><button class="btn" id="autoOff">■</button></div>
+        <p class="muted small">Otomatik yönetmenin sırası telefonda kurulur.</p></div></div>
+      <div class="card"><h3>ALT BANT</h3><div class="stack">
+        <input id="bt" placeholder="Başlık"><input id="bs" placeholder="Alt satır">
+        <div class="row"><button class="btn sm" id="bon" style="flex:1">Göster</button><button class="btn sm" id="boff" style="flex:1">Gizle</button></div></div></div>
+      <div class="card"><h3>KAYAN YAZI</h3><div class="stack">
+        <input id="tt" placeholder="Kayan yazı metni">
+        <div class="row"><button class="btn sm" id="ton" style="flex:1">Göster</button><button class="btn sm" id="toff" style="flex:1">Gizle</button></div></div></div>
+      <div class="card"><h3>SES</h3><select id="audio">
+        <option value="program">Aynı ortam (yayındaki kişi)</option><option value="host">Yayıncının telefonu</option>
+        <option value="source">Tek mikrofon (seçili kişi)</option><option value="all">Herkes</option></select>
+        <select id="asrc" style="margin-top:8px"></select></div>
+    </div></div>`;
+
+  $('#leave').onclick = async () => { await room.disconnect(); pickView(); };
+  $('#camlink').onclick = async () => {
+    const code = host()?.attributes?.code;
+    if (!code) return toast('Yayın kodu henüz yok; telefon bağlı olmalı');
+    const url = `${location.origin}/kamera/?kod=${code}`;
+    try { await navigator.clipboard.writeText(url); toast('Kopyalandı: ' + url); } catch { prompt('Webcam linki', url); }
+  };
+  $('#layout').onclick = (e) => e.target.dataset.v && cmd({ t: 'layout', mode: e.target.dataset.v });
+  $('#scene').onclick = (e) => e.target.dataset.v && cmd({ t: 'scene', mode: e.target.dataset.v, text: 'Kısa bir ara veriyoruz' });
+  $('#hl').onclick = () => { cmd({ t: 'highlight' }); toast('⭐ İşaretlendi'); };
+  $('#autoOn').onclick = () => cmd({ t: 'auto', on: true });
+  $('#autoOff').onclick = () => cmd({ t: 'auto', on: false });
+  $('#bon').onclick = () => cmd({ t: 'banner', on: true, title: $('#bt').value, subtitle: $('#bs').value });
+  $('#boff').onclick = () => cmd({ t: 'banner', on: false });
+  $('#ton').onclick = () => cmd({ t: 'ticker', on: true, text: $('#tt').value });
+  $('#toff').onclick = () => cmd({ t: 'ticker', on: false });
+  $('#audio').onchange = () => cmd({ t: 'audio', mode: $('#audio').value, source: $('#asrc').value });
+  $('#asrc').onchange = () => cmd({ t: 'audio', mode: 'source', source: $('#asrc').value });
+
+  // Klavye: 1–9 kamera, H highlight (yazı alanındayken çalışmaz)
+  const onKey = (e) => {
+    if (/INPUT|SELECT|TEXTAREA/.test(document.activeElement?.tagName)) return;
+    if (e.key >= '1' && e.key <= '9') { const p = cams()[Number(e.key) - 1]; if (p) cmd({ t: 'pick', id: p.identity }); }
+    if (e.key === 'h' || e.key === 'H') $('#hl').click();
+  };
+  window.addEventListener('keydown', onKey);
+  room.on(RoomEvent.Disconnected, () => window.removeEventListener('keydown', onKey));
+
+  function renderGrid() {
+    const g = $('#grid'); if (!g) return;
+    const list = cams(), o = overlay(), pid = programId(), split = o.layout?.mode === 'split';
+    if (!list.length) { g.innerHTML = '<div class="empty">Henüz kamera yok. Konuklar katılınca burada görünür.</div>'; return; }
+    const ids = list.map((p) => p.identity);
+    for (const id of [...videos.keys()]) if (!ids.includes(id)) videos.delete(id);
+    g.innerHTML = '';
+    list.forEach((p, i) => {
+      const slot = p.identity === pid ? 1 : split && o.layout?.second === p.identity ? 2 : 0;
+      const a = p.attributes || {};
+      const q = p.connectionQuality;
+      const net = q === ConnectionQuality.Excellent ? '#34d399' : q === ConnectionQuality.Good ? '#fff' : q === ConnectionQuality.Poor || q === ConnectionQuality.Lost ? '#ff4d6d' : '#9a96c0';
+      const bat = a.bat ? `${a.chg === '1' ? '⚡' : '🔋'} <span style="color:${Number(a.bat) <= 15 && a.chg !== '1' ? '#ff4d6d' : Number(a.bat) <= 30 && a.chg !== '1' ? '#fbbf24' : '#fff'}">${esc(a.bat)}%</span>` : '';
+      const el = document.createElement('div');
+      el.className = `tile ${slot === 1 ? 'p1' : slot === 2 ? 'p2' : ''} ${st.speakers.has(p.identity) ? 'speak' : ''}`;
+      el.innerHTML = `<div class="tl"><span class="key">${i + 1}</span>${slot === 1 ? '<span class="pill live">YAYINDA</span>' : slot === 2 ? '<span class="pill" style="background:var(--violet)">2. EKRAN</span>' : ''}</div>
+        ${split && !slot ? '<button class="btn sm second">2. ekran yap</button>' : ''}
+        <div class="bl"><span class="name">@${esc(p.name || p.identity)}${p.isMicrophoneEnabled ? '' : ' 🔇'}</span>
+        <span class="badges"><span style="color:${net}">● ağ</span>${bat}${a.city ? `<span>📍 ${esc(a.city)}</span>` : ''}</span></div>`;
+      let v = videos.get(p.identity);
+      const pub = [...p.trackPublications.values()].find((t) => t.source === Track.Source.Camera && t.track);
+      if (!v && pub) { v = pub.track.attach(); v.muted = true; v.playsInline = true; videos.set(p.identity, v); }
+      if (v) el.prepend(v);
+      el.onclick = (e) => { if (e.target.classList.contains('second')) cmd({ t: 'second', id: p.identity }); else cmd({ t: 'pick', id: p.identity }); };
+      g.appendChild(el);
+    });
+  }
+
+  function renderSide() {
+    const o = overlay(), h = host(), live = liveAt();
+    $('#status').className = 'pill ' + (live ? 'live' : h ? 'ok' : 'warn');
+    $('#status').textContent = live ? 'CANLI' : h ? 'TELEFON BAĞLI' : 'TELEFON BAĞLI DEĞİL';
+    document.querySelectorAll('#layout button').forEach((b) => b.classList.toggle('on', b.dataset.v === (o.layout?.mode || 'single')));
+    document.querySelectorAll('#scene button').forEach((b) => b.classList.toggle('on', b.dataset.v === ((o.scene?.mode || 'live') === 'live' ? 'live' : 'brb')));
+    if (document.activeElement !== $('#audio')) $('#audio').value = o.audio || 'program';
+    const src = $('#asrc');
+    src.style.display = o.audio === 'source' ? '' : 'none';
+    src.innerHTML = [...room.remoteParticipants.values()].filter((p) => !p.identity.endsWith(':web'))
+      .map((p) => `<option value="${esc(p.identity)}" ${o.audioSource === p.identity ? 'selected' : ''}>🎙 @${esc(p.name || p.identity)}</option>`).join('');
+    // Konuşan önerisi: yayında olmayan biri 1,5 sn'den uzun konuşuyor, yayındaki susuyor
+    const pid = programId();
+    const cand = [...st.speakers].find((id) => id !== pid && !id.endsWith(':web'));
+    if (!cand || st.speakers.has(pid)) { st.since = null; st.suggestion = null; }
+    else { if (st.since?.id !== cand) st.since = { id: cand, at: Date.now() }; st.suggestion = Date.now() - st.since.at >= 1500 ? cand : null; }
+    const p = st.suggestion && room.remoteParticipants.get(st.suggestion);
+    $('#sug').innerHTML = p ? `<div class="card suggest"><span>🎙</span><b style="flex:1">@${esc(p.name)} konuşuyor</b><button class="btn pri sm" id="go">Geç →</button></div>` : '';
+    if (p) $('#go').onclick = () => cmd({ t: 'pick', id: p.identity });
+    renderBroadcast();
+  }
+
+  function renderBroadcast() {
+    const bc = $('#bc'), live = liveAt();
+    if (st.busy) return;
+    if (live) {
+      bc.innerHTML = `<div class="row"><span class="pill live">CANLI</span><span class="muted small" id="el"></span></div>
+        ${st.liveDelay ? `<p class="small" style="color:var(--warn)">Platformlar ${st.liveDelay} sn geriden izliyor. Sorun görürsen kes: son ${st.liveDelay} sn hiç gitmez.</p>
+        <button class="btn cut" id="cut">✂ ACİL KES</button>` : ''}
+        <button class="btn live" id="stop">■ Yayını durdur</button>`;
+      const s = Math.floor((Date.now() - new Date(live).getTime()) / 1000);
+      $('#el').textContent = `${Math.floor(s / 60)} dk ${s % 60} sn`;
+      $('#stop').onclick = stop;
+      if ($('#cut')) $('#cut').onclick = cut;
+      return;
+    }
+    const ok = st.targets.filter((t) => t.server && t.stream_key);
+    bc.innerHTML = `${ok.length ? ok.map((t) => `<label class="chk"><input type="checkbox" data-p="${t.platform}" ${t.enabled ? 'checked' : ''}> ${LABEL[t.platform] ?? t.platform}</label>`).join('')
+        : '<p class="muted small">Kayıtlı platform yok. Telefonda Yayın sekmesinden anahtarlarını bir kez gir.</p>'}
+      <select id="fmt"><option value="portrait">▯ Dikey 9:16</option><option value="landscape">▭ Yatay 16:9</option></select>
+      ${st.team ? `<select id="dl"><option value="0">Gecikme kapalı</option>${[5, 10, 20].map((d) => `<option value="${d}" ${st.delaySel === d ? 'selected' : ''}>${d} sn gecikmeli</option>`).join('')}</select>` : ''}
+      <button class="btn live" id="start" ${ok.length ? '' : 'disabled'}>● Canlı yayına başla</button>`;
+    $('#start').onclick = start;
+    if ($('#dl')) $('#dl').onchange = () => { st.delaySel = Number($('#dl').value); };
+  }
+
+  async function start() {
+    const targets = [...document.querySelectorAll('#bc input[type=checkbox]:checked')].map((i) => i.dataset.p);
+    if (!targets.length) return toast('En az bir platform seç');
+    const format = $('#fmt').value, delaySec = st.team ? st.delaySel : 0;
+    st.busy = 'start'; $('#bc').innerHTML = '<span class="muted">Başlatılıyor…</span>';
+    try {
+      const r = await call('broadcast', { sessionId: session.id, action: 'start', targets, format, delaySec });
+      st.liveDelay = r.delaySec ?? 0;
+      cmd({ t: 'live', at: r.startedAt, delay: st.liveDelay });
+      toast('Yayın başladı');
+    } catch (e) { toast(e.message); }
+    st.busy = ''; renderBroadcast();
+  }
+  async function stop() {
+    if (!confirm('Canlı yayın sona erecek. Emin misin?')) return;
+    st.busy = 'stop';
+    try { await call('broadcast', { sessionId: session.id, action: 'stop' }); cmd({ t: 'live', at: '', delay: 0 }); st.liveDelay = 0; toast('Yayın durdu'); }
+    catch (e) { toast(e.message); }
+    st.busy = ''; renderBroadcast();
+  }
+  // Acil kesme: önce ekran "kısa ara"ya geçer, sonra tampon atılır. Onay sorulmaz, her saniye önemli.
+  async function cut() {
+    cmd({ t: 'scene', mode: 'brb', text: 'Kısa bir ara veriyoruz' });
+    try { await call('broadcast', { sessionId: session.id, action: 'cut' }); toast(`Kesildi: son ${st.liveDelay} sn platformlara gitmedi. Hazır olunca "Canlı"ya dön.`); }
+    catch (e) { toast('Kesilemedi: ' + e.message); }
+  }
+
+  // Hesaptaki platformlar, paket ve süren yayının gecikmesi
+  const [{ data: tg }, { data: pl }, { data: ss }] = await Promise.all([
+    sb.from('stream_targets').select('platform, server, stream_key, enabled'),
+    sb.rpc('effective_plan', { uid: user.id }),
+    sb.from('sessions').select('delay_sec').eq('id', session.id).single(),
+  ]);
+  st.targets = tg ?? []; st.team = pl === 'team'; st.liveDelay = ss?.delay_sec ?? 0;
+
+  const redraw = () => { renderGrid(); renderSide(); };
+  room.on(RoomEvent.TrackSubscribed, redraw).on(RoomEvent.TrackUnsubscribed, redraw)
+    .on(RoomEvent.ParticipantConnected, redraw).on(RoomEvent.ParticipantDisconnected, redraw)
+    .on(RoomEvent.ParticipantAttributesChanged, redraw).on(RoomEvent.TrackMuted, redraw).on(RoomEvent.TrackUnmuted, redraw)
+    .on(RoomEvent.ConnectionQualityChanged, redraw)
+    .on(RoomEvent.ActiveSpeakersChanged, (list) => { st.speakers = new Set(list.map((p) => p.identity)); redraw(); })
+    .on(RoomEvent.Disconnected, () => { toast('Bağlantı koptu'); pickView(); });
+  try { await room.connect(conn.url, conn.token); }
+  catch (e) { toast('Bağlanılamadı: ' + e.message); return pickView(); }
+  redraw();
+  // Sayaç, rozetler ve öneri için saniyede bir tazele (ızgarayı değil, yalnızca yan paneli)
+  const tick = setInterval(() => { if (!room.engine || room.state === 'disconnected') return clearInterval(tick); renderSide(); }, 1000);
+}
+
+sb.auth.getSession().then(({ data }) => data.session ? pickView() : loginView());
+</script>
+</body>
+</html>

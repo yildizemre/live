@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="tr" translate="no" class="notranslate">
+<head>
+<meta charset="utf-8">
+<meta name="google" content="notranslate">
+<meta name="viewport" content="width=device-width">
+<title>Rejivio — yayın şablonu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;800&display=swap" rel="stylesheet">
+<style>
+  :root { --accent: #8e4ff0; --accent2: #e3609a; --ink: #0b0c14; --paper: #f5f6fc; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: #000; font-family: Inter, system-ui, sans-serif; }
+  #stage { position: absolute; inset: 0; }
+  .slot { position: absolute; overflow: hidden; background: #000; }
+  .slot video { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .slot .bg { object-fit: cover; filter: blur(40px) brightness(.5); transform: scale(1.15); }
+  .slot .fg { object-fit: contain; }
+  body.portrait .slot .fg, body.split .slot .fg { object-fit: cover; }
+  .slot .name { position: absolute; left: 16px; top: 14px; padding: 5px 12px; border-radius: 999px; background: rgba(11,12,20,.6);
+    color: var(--paper); font: 600 18px Inter, sans-serif; display: none; }
+  body.split .slot .name { display: block; }
+  #s1 { inset: 0; }
+  #s2 { display: none; }
+  body.split #s2 { display: block; }
+  body.split.portrait #s1 { inset: 0 0 50% 0; } body.split.portrait #s2 { inset: 50% 0 0 0; }
+  body.split:not(.portrait) #s1 { inset: 0 50% 0 0; } body.split:not(.portrait) #s2 { inset: 0 0 0 50%; }
+  body.split .divider { display: block; }
+  .divider { display: none; position: absolute; background: linear-gradient(90deg, var(--accent), var(--accent2)); z-index: 2; }
+  body.split.portrait .divider { left: 0; right: 0; top: calc(50% - 3px); height: 6px; }
+  body.split:not(.portrait) .divider { top: 0; bottom: 0; left: calc(50% - 3px); width: 6px; background: linear-gradient(180deg, var(--accent), var(--accent2)); }
+
+  /* Sahne zeminleri (tema) */
+  .scenebg { position: absolute; inset: 0; background: var(--ink); }
+  .scenebg.aurora { background: radial-gradient(circle at 30% 0%, color-mix(in srgb, var(--accent) 50%, transparent), transparent 55%),
+                 radial-gradient(circle at 80% 100%, color-mix(in srgb, var(--accent2) 40%, transparent), transparent 55%), var(--ink); }
+  .scenebg.plain { background: #0f1117; }
+  .scenebg.grid { background: linear-gradient(transparent 95%, color-mix(in srgb, var(--accent) 35%, transparent) 95%) 0 0 / 100% 48px,
+                 linear-gradient(90deg, transparent 95%, color-mix(in srgb, var(--accent2) 35%, transparent) 95%) 0 0 / 48px 100%, #07070d; }
+  .scenebg.spot { background: radial-gradient(ellipse at 50% 20%, color-mix(in srgb, var(--accent2) 45%, transparent), transparent 60%), #0a0806; }
+  .scenebg.sunset { background: linear-gradient(180deg, var(--accent2), var(--accent) 55%, #1a0b1f); }
+
+  #wait { position: absolute; inset: 0; display: grid; place-items: center; color: var(--paper); text-align: center; padding: 0 40px; font: 800 44px Inter, sans-serif; letter-spacing: -.02em; }
+  #wait span { position: relative; }
+
+  /* Sahne ekranları: birazdan başlıyoruz / hemen dönüyorum / bitti */
+  #scene { position: absolute; inset: 0; z-index: 8; display: none; place-items: center; text-align: center; color: var(--paper); padding: 40px; }
+  #scene .box { position: relative; display: grid; gap: 18px; justify-items: center; }
+  #scene img { max-width: 46%; max-height: 22vh; object-fit: contain; }
+  #scene .t { font: 800 64px/1.05 Inter, sans-serif; letter-spacing: -.03em; }
+  #scene .s { font: 600 26px Inter, sans-serif; opacity: .85; }
+  #scene .cd { font: 800 110px Inter, sans-serif; font-variant-numeric: tabular-nums; background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; color: transparent; }
+  body.portrait #scene .t { font-size: 54px; }
+
+  #logo { position: absolute; object-fit: contain; display: none; z-index: 3; filter: drop-shadow(0 4px 14px rgba(0,0,0,.45)); }
+  .tl { top: 32px; left: 36px; } .tr { top: 32px; right: 36px; } .bl { left: 36px; } .br { right: 36px; }
+  #watermark { position: absolute; z-index: 9; right: 28px; top: 28px; width: 210px; opacity: .92; display: none; filter: drop-shadow(0 2px 10px rgba(0,0,0,.6)); }
+  body.free #watermark { display: block; }
+
+  /* Alt bant stilleri (tema) */
+  #banner { position: absolute; left: 36px; display: none; max-width: 60%; z-index: 4; border-radius: 14px; padding: 14px 24px 14px 22px; overflow: hidden; background: rgba(11,12,20,.88); }
+  #banner::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: linear-gradient(180deg, var(--accent), var(--accent2)); }
+  body.band-glass #banner { background: rgba(255,255,255,.14); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,.25); }
+  body.band-neon #banner { background: rgba(5,5,12,.85); border: 2px solid var(--accent); box-shadow: 0 0 22px var(--accent), inset 0 0 18px color-mix(in srgb, var(--accent2) 40%, transparent); }
+  body.band-neon #banner::before { display: none; }
+  body.band-minimal #banner { background: transparent; padding-left: 0; } body.band-minimal #banner::before { display: none; }
+  body.band-minimal #banner .t { text-shadow: 0 2px 12px rgba(0,0,0,.8); }
+  body.portrait #banner { max-width: calc(100% - 72px); }
+  #banner .t { color: var(--paper); font: 800 34px/1.1 Inter, sans-serif; letter-spacing: -.01em; }
+  #banner .s { color: var(--accent2); font: 600 16px/1.4 Inter, sans-serif; letter-spacing: .16em; text-transform: uppercase; margin-top: 4px; }
+
+  #ticker { position: absolute; left: 0; right: 0; bottom: 0; height: 64px; display: none; overflow: hidden; z-index: 4; background: rgba(11,12,20,.92); }
+  #ticker::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  #ticker .tag { position: absolute; left: 0; top: 0; bottom: 0; z-index: 2; display: flex; align-items: center; padding: 0 22px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2)); color: #fff; font: 800 18px Inter, sans-serif; letter-spacing: .14em; }
+  #ticker .run { position: absolute; top: 3px; bottom: 0; display: flex; align-items: center; white-space: nowrap; color: var(--paper); font: 500 26px Inter, sans-serif; will-change: transform; }
+
+  #sponsor { position: absolute; z-index: 4; display: none; align-items: center; gap: 14px; padding: 10px 18px 10px 10px; background: rgba(255,255,255,.94); border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,.35); }
+  #sponsor img { height: 56px; max-width: 140px; object-fit: contain; border-radius: 10px; }
+  #sponsor .k { font: 600 12px Inter, sans-serif; letter-spacing: .16em; color: #6b6f85; text-transform: uppercase; }
+  #sponsor .n { font: 800 22px Inter, sans-serif; color: #0b0c14; }
+
+  .card { position: absolute; z-index: 5; left: 36px; right: 36px; display: none; padding: 22px 26px; border-radius: 22px; border: 2px solid transparent; color: var(--paper);
+    background-image: linear-gradient(rgba(11,12,20,.94), rgba(11,12,20,.94)), linear-gradient(90deg, var(--accent), var(--accent2));
+    background-origin: border-box; background-clip: padding-box, border-box; }
+  body:not(.portrait) .card { left: 22%; right: 22%; }
+  body:not(.portrait).has-prod .card { left: 8%; right: 38%; }
+  .card .a { font: 700 18px Inter, sans-serif; color: var(--accent2); margin-bottom: 8px; }
+  .card .q { font: 800 32px/1.25 Inter, sans-serif; }
+  #question { top: 24%; }
+  #poll, #quiz { top: 18%; }
+  .opt { margin-top: 12px; position: relative; border-radius: 12px; overflow: hidden; background: rgba(255,255,255,.08); }
+  .opt .bar { position: absolute; inset: 0 auto 0 0; background: linear-gradient(90deg, var(--accent), var(--accent2)); opacity: .55; transition: width .6s; }
+  .opt .row { position: relative; display: flex; justify-content: space-between; padding: 12px 16px; font: 700 24px Inter, sans-serif; }
+  .opt.correct { outline: 3px solid #3ddc97; }
+  #board { margin-top: 14px; font: 600 20px Inter, sans-serif; display: grid; gap: 6px; }
+  #board div { display: flex; justify-content: space-between; }
+
+  /* QR ile katıl + ürün vitrini */
+  #qr, #product { position: absolute; z-index: 5; display: none; background: #fff; color: #0b0c14; border-radius: 18px; padding: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.4); }
+  #qr { left: 36px; top: 32px; text-align: center; font: 800 16px Inter, sans-serif; }
+  #qr canvas, #product canvas { display: block; }
+  #qr .c { letter-spacing: .2em; margin-top: 6px; }
+  body.portrait #qr.low { top: 50%; }
+  #product { right: 36px; display: none; gap: 12px; align-items: center; max-width: 520px; }
+  #product img.p { width: 96px; height: 96px; object-fit: cover; border-radius: 12px; }
+  #product .n { font: 800 22px Inter, sans-serif; } #product .pr { font: 800 26px Inter, sans-serif; color: var(--accent); }
+  #product .k { font: 600 12px Inter, sans-serif; letter-spacing: .14em; color: #6b6f85; }
+
+  /* Konuk süresi ve sıradaki konuk */
+  #timer { position: absolute; z-index: 6; right: 36px; display: none; padding: 10px 16px; border-radius: 14px; background: rgba(11,12,20,.85); color: var(--paper);
+    font: 800 30px Inter, sans-serif; font-variant-numeric: tabular-nums; border: 2px solid var(--accent); }
+  #timer.low { border-color: #ff4d5e; color: #ff4d5e; }
+  #next { position: absolute; z-index: 6; left: 36px; display: none; padding: 8px 14px; border-radius: 999px; background: rgba(11,12,20,.8); color: var(--paper); font: 700 18px Inter, sans-serif; }
+
+  /* Uçan tepkiler */
+  .react { position: absolute; z-index: 7; bottom: 90px; font-size: 54px; pointer-events: none; animation: fly 3.2s ease-out forwards; }
+  @keyframes fly { 0% { transform: translateY(0) scale(.6); opacity: 0; } 10% { opacity: 1; transform: translateY(-40px) scale(1); }
+    100% { transform: translateY(-62vh) translateX(var(--dx)) scale(1.15); opacity: 0; } }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="scenebg aurora" id="bgfill"></div>
+  <div class="slot" id="s1"><video class="bg" muted playsinline autoplay></video><video class="fg" muted playsinline autoplay></video><div class="name"></div></div>
+  <div class="slot" id="s2"><video class="bg" muted playsinline autoplay></video><video class="fg" muted playsinline autoplay></video><div class="name"></div></div>
+  <div class="divider"></div>
+  <div id="wait"><div class="scenebg aurora" id="waitbg" style="position:absolute;inset:0"></div><span>Yayın birazdan başlıyor</span></div>
+  <img id="logo" alt="">
+  <div id="banner"><div class="t"></div><div class="s"></div></div>
+  <div id="sponsor"><img alt=""><div><div class="k">Sponsor</div><div class="n"></div></div></div>
+  <div id="question" class="card"><div class="a"></div><div class="q"></div></div>
+  <div id="poll" class="card"><div class="a">Anket</div><div class="q"></div><div class="opts"></div></div>
+  <div id="quiz" class="card"><div class="a">Quiz</div><div class="q"></div><div class="opts"></div><div id="board"></div></div>
+  <div id="qr"><div class="code"></div><div>Konuk ol</div><div class="c"></div></div>
+  <div id="product"><img class="p" alt=""><div style="flex:1"><div class="k">ÜRÜN</div><div class="n"></div><div class="pr"></div></div><div class="code"></div></div>
+  <div id="timer"></div>
+  <div id="next"></div>
+  <div id="ticker"><div class="tag">CANLI</div><div class="run"></div></div>
+  <div id="scene"><div class="scenebg aurora" id="scenebg"></div><div class="box"><img alt="" id="scenelogo"><div class="t"></div><div class="cd"></div><div class="s"></div></div></div>
+  <img id="watermark" alt="Rejivio" src="/brand/watermark.png">
+</div>
+<script type="module">
+import { Room, RoomEvent, Track } from 'https://cdn.jsdelivr.net/npm/livekit-client@2/+esm';
+import QRCode from 'https://cdn.jsdelivr.net/npm/qrcode@1.5.4/+esm';
+
+const q = new URLSearchParams(location.search);
+// Paket bilgisi sunucunun verdiği adresten gelir: /free/ ya da /pro/ (önizlemede ?pro=1)
+const isPro = location.pathname.includes('/pro') || q.has('pro');
+const JOIN_BASE = location.origin + '/k/';
+document.body.classList.toggle('free', !isPro);
+document.body.classList.toggle('portrait', innerHeight > innerWidth);
+
+const room = new Room({ adaptiveStream: false });
+const $ = (s) => document.querySelector(s);
+const attached = { s1: null, s2: null };
+let started = false, tickerText = '', tickerSpeed = 130, tickerX = innerWidth, lastT = 0;
+let sponsorKey = '', sponsorIdx = 0, sponsorTimer = null, sponsorItems = [];
+let o = {}, qrKey = '', productKey = '';
+// Ses: katılımcı → <audio>; hangisinin duyulacağını yayıncının ses modu belirler
+const audioEls = new Map();
+
+function host() {
+  return [...room.remoteParticipants.values()].find((p) => {
+    try { return JSON.parse(p.metadata || '{}').role === 'host'; } catch { return false; }
+  });
+}
+
+function setSlot(slot, identity) {
+  const p = identity && room.getParticipantByIdentity(identity);
+  const track = p?.getTrackPublication(Track.Source.Camera)?.videoTrack || null;
+  const el = document.getElementById(slot);
+  if (track !== attached[slot]) {
+    attached[slot]?.detach(el.querySelector('.bg')); attached[slot]?.detach(el.querySelector('.fg'));
+    attached[slot] = track;
+    if (track) { track.attach(el.querySelector('.bg')); track.attach(el.querySelector('.fg')); }
+  }
+  el.querySelector('.name').textContent = p?.name ? '@' + p.name : '';
+  return { ok: !!track, name: p?.name, isHost: p?.identity === host()?.identity };
+}
+
+async function drawQR(el, text, size) {
+  el.innerHTML = '';
+  const c = document.createElement('canvas');
+  await QRCode.toCanvas(c, text, { width: size, margin: 0, color: { dark: '#0b0c14', light: '#ffffff' } });
+  el.appendChild(c);
+}
+
+const fmt = (sec) => { const s = Math.max(0, Math.ceil(sec)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
+
+function options(container, opts, counts, correct) {
+  const total = Math.max(1, counts.reduce((a, b) => a + b, 0));
+  container.innerHTML = opts.map((t, i) => {
+    const pct = Math.round(((counts[i] || 0) / total) * 100);
+    return `<div class="opt ${correct === i ? 'correct' : ''}"><div class="bar" style="width:${counts.length ? pct : 0}%"></div>
+      <div class="row"><span>${String.fromCharCode(65 + i)}. ${esc(t)}</span><span>${counts.length ? pct + '%' : ''}</span></div></div>`;
+  }).join('');
+}
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+function render() {
+  const h = host();
+  try { o = JSON.parse(h?.attributes?.overlay || '{}'); } catch { o = {}; }
+  const theme = o.theme || {};
+
+  document.documentElement.style.setProperty('--accent', o.accent || '#8e4ff0');
+  document.documentElement.style.setProperty('--accent2', o.accent2 || '#e3609a');
+  for (const b of ['glass', 'neon', 'minimal']) document.body.classList.toggle('band-' + b, theme.band === b);
+  for (const id of ['bgfill', 'waitbg', 'scenebg']) $('#' + id).className = 'scenebg ' + (theme.scene || 'aurora');
+
+  const programId = h?.attributes?.program || h?.identity;
+  const split = o.layout?.mode === 'split' && o.layout.second && o.layout.second !== programId;
+  document.body.classList.toggle('split', !!split);
+  const s1 = setSlot('s1', programId);
+  setSlot('s2', split ? o.layout.second : null);
+  $('#wait').style.display = s1.ok ? 'none' : 'grid';
+
+  const tickerOn = !!(o.ticker?.on && o.ticker.text);
+  const low = tickerOn ? 92 : 36;
+
+  // Logo yalnızca Pro pakette
+  const logo = $('#logo');
+  if (isPro && o.logo?.url) {
+    if (logo.src !== o.logo.url) logo.src = o.logo.url;
+    logo.className = o.logo.pos || 'tr';
+    const k = ({ s: .13, m: .2, l: .28 })[o.logo.size || 'm'];
+    logo.style.maxWidth = (innerWidth * k) + 'px'; logo.style.maxHeight = (innerHeight * k) + 'px';
+    logo.style.bottom = logo.className.startsWith('b') ? low + 'px' : '';
+    logo.style.display = 'block';
+  } else logo.style.display = 'none';
+
+  // Alt bant: elle yazılan bant öncelikli; kapalıysa ve otomatik bant açıksa yayındaki konuğun adı
+  const banner = $('#banner');
+  let bt = '', bs = '';
+  if (o.banner?.on && o.banner.title) { bt = o.banner.title; bs = o.banner.subtitle || ''; }
+  else if (o.autoBand && s1.name && !split) { bt = '@' + s1.name; bs = s1.isHost ? 'Yayıncı' : 'Konuk'; }
+  banner.style.display = bt ? 'block' : 'none';
+  banner.querySelector('.t').textContent = bt;
+  banner.querySelector('.s').textContent = bs;
+  banner.style.bottom = (tickerOn ? 96 : 40) + 'px';
+
+  const ticker = $('#ticker');
+  ticker.style.display = tickerOn ? 'block' : 'none';
+  const text = o.ticker?.text || '';
+  if (text !== tickerText) { tickerText = text; ticker.querySelector('.run').textContent = text; tickerX = innerWidth; }
+  tickerSpeed = ({ slow: 80, normal: 130, fast: 200 })[o.ticker?.speed || 'normal'];
+
+  // Sponsor kartı: sırayla döner; logo üstteyse altta, alttaysa üstte durur
+  sponsorItems = (o.sponsors?.on ? o.sponsors.items || [] : []).filter((s) => s.name || s.logo);
+  const key = JSON.stringify([sponsorItems, o.sponsors?.interval]);
+  if (key !== sponsorKey) {
+    sponsorKey = key; sponsorIdx = 0; clearInterval(sponsorTimer);
+    if (sponsorItems.length > 1) sponsorTimer = setInterval(() => { sponsorIdx++; showSponsor(); }, (o.sponsors.interval || 10) * 1000);
+  }
+  const sp = $('#sponsor');
+  const logoTop = (o.logo?.pos || 'tr').startsWith('t');
+  sp.style.right = '36px';
+  if (logoTop) { sp.style.top = ''; sp.style.bottom = (low + (bt ? 120 : 0)) + 'px'; }
+  else { sp.style.bottom = ''; sp.style.top = isPro ? '32px' : '110px'; }
+  showSponsor();
+
+  // Soru kartı
+  const qc = $('#question');
+  qc.style.display = o.question?.on && o.question.text ? 'block' : 'none';
+  qc.querySelector('.a').textContent = o.question?.author ? '@' + o.question.author + ' soruyor' : 'Soru';
+  qc.querySelector('.q').textContent = o.question?.text || '';
+
+  // Anket
+  const pl = $('#poll');
+  pl.style.display = o.poll?.on && o.poll.q ? 'block' : 'none';
+  if (o.poll?.on) { pl.querySelector('.q').textContent = o.poll.q; options(pl.querySelector('.opts'), o.poll.options || [], o.poll.votes || []); }
+
+  // Quiz
+  const qz = $('#quiz');
+  qz.style.display = o.quiz?.on && o.quiz.q ? 'block' : 'none';
+  if (o.quiz?.on) {
+    qz.querySelector('.q').textContent = o.quiz.q;
+    options(qz.querySelector('.opts'), o.quiz.options || [], o.quiz.reveal ? o.quiz.answers || [] : [], o.quiz.reveal ? o.quiz.correct : -1);
+    const board = (o.quiz.board || []).slice(0, 5);
+    $('#board').innerHTML = board.length ? '<div style="opacity:.7">Skor tablosu</div>' + board.map((b, i) => `<div><span>${i + 1}. @${esc(b.name)}</span><span>${b.pts}</span></div>`).join('') : '';
+  }
+
+  // QR ile konuk ol
+  const code = h?.attributes?.code || '';
+  const qrOn = !!(o.qr?.on && code);
+  $('#qr').style.display = qrOn ? 'block' : 'none';
+  $('#qr').classList.toggle('low', !!(o.poll?.on || o.quiz?.on));
+  if (qrOn && qrKey !== code) { qrKey = code; drawQR($('#qr .code'), JOIN_BASE + code, 150); $('#qr .c').textContent = code; }
+
+  // Ürün vitrini
+  const pr = o.product || {};
+  const prOn = !!(pr.on && pr.name);
+  const pe = $('#product');
+  pe.style.display = prOn ? 'flex' : 'none';
+  document.body.classList.toggle('has-prod', prOn);
+  if (prOn) {
+    pe.style.bottom = (low + (bt ? 120 : 0)) + 'px';
+    const img = pe.querySelector('img.p'); img.style.display = pr.image ? 'block' : 'none'; if (pr.image && img.src !== pr.image) img.src = pr.image;
+    pe.querySelector('.n').textContent = pr.name; pe.querySelector('.pr').textContent = pr.price || '';
+    const pk = pr.url || '';
+    if (pk !== productKey) { productKey = pk; pk ? drawQR(pe.querySelector('.code'), pk, 96) : (pe.querySelector('.code').innerHTML = ''); }
+  }
+
+  // Sıradaki konuk
+  const nx = $('#next');
+  nx.style.display = o.next ? 'block' : 'none';
+  nx.textContent = o.next ? 'Sıradaki: @' + o.next : '';
+  nx.style.bottom = (low + (bt ? 120 : 0)) + 'px';
+  $('#timer').style.bottom = (low + (bt ? 120 : 0)) + 'px';
+
+  if (!started) { started = true; console.log('START_RECORDING'); }
+
+  // program: yalnızca yayındaki kişi(ler) · host: yayıncı · all: herkes · source: seçilen mikrofon (yoksa yayıncı)
+  const mode = o.audio || 'program';
+  const src = o.audioSource && audioEls.has(o.audioSource) ? o.audioSource : h?.identity;
+  const audible = new Set(mode === 'all' ? [...audioEls.keys()] : mode === 'host' ? [h?.identity] : mode === 'source' ? [src]
+    : [programId, split ? o.layout.second : null]);
+  // Sahne ekranında (birazdan/BRB/bitti) konuşmalar yayına gitmesin, yalnızca yayıncı duyulsun
+  const scene = o.scene?.mode && o.scene.mode !== 'live';
+  for (const [id, el] of audioEls) el.muted = scene ? id !== h?.identity : !audible.has(id);
+}
+
+// Sahne ve sayaçlar her saniye güncellenir
+function tickClock() {
+  const sc = o.scene || {};
+  const el = $('#scene');
+  const on = sc.mode && sc.mode !== 'live';
+  el.style.display = on ? 'grid' : 'none';
+  if (on) {
+    const titles = { starting: 'Birazdan başlıyoruz', brb: 'Hemen dönüyoruz', ended: 'Yayın bitti, teşekkürler!' };
+    el.querySelector('.t').textContent = sc.text || titles[sc.mode] || '';
+    const left = sc.until ? (new Date(sc.until).getTime() - Date.now()) / 1000 : 0;
+    el.querySelector('.cd').textContent = sc.mode === 'starting' && left > 0 ? fmt(left) : '';
+    el.querySelector('.s').textContent = sc.mode === 'ended' ? 'Takipte kal 💜' : sc.mode === 'brb' ? 'Ayrılma, birazdan buradayız' : '';
+    const lg = $('#scenelogo');
+    const src = isPro && o.logo?.url ? o.logo.url : '/brand/watermark.png';
+    if (lg.getAttribute('src') !== src) lg.src = src;
+  }
+  const tm = o.timer || {};
+  const tEl = $('#timer');
+  const left = tm.on && tm.until ? (new Date(tm.until).getTime() - Date.now()) / 1000 : null;
+  tEl.style.display = left !== null && !on ? 'block' : 'none';
+  if (left !== null) { tEl.textContent = '⏱ ' + fmt(left); tEl.classList.toggle('low', left <= 15); }
+}
+setInterval(tickClock, 500);
+
+function showSponsor() {
+  const sp = $('#sponsor');
+  if (!sponsorItems.length) { sp.style.display = 'none'; return; }
+  const s = sponsorItems[sponsorIdx % sponsorItems.length];
+  sp.style.display = 'flex';
+  const img = sp.querySelector('img');
+  img.style.display = s.logo ? 'block' : 'none';
+  if (s.logo && img.src !== s.logo) img.src = s.logo;
+  sp.querySelector('.n').textContent = s.name || '';
+}
+
+function tick(t) {
+  const dt = lastT ? (t - lastT) / 1000 : 0; lastT = t;
+  const run = $('#ticker .run');
+  if (tickerText) {
+    tickerX -= tickerSpeed * dt;
+    if (tickerX < -run.offsetWidth) tickerX = innerWidth;
+    run.style.transform = `translateX(${Math.max(tickerX, -run.offsetWidth)}px)`;
+  }
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+// Uçan tepki
+function flyEmoji(e) {
+  const d = document.createElement('div');
+  d.className = 'react'; d.textContent = e;
+  d.style.left = (innerWidth * (0.55 + Math.random() * 0.35)) + 'px';
+  d.style.setProperty('--dx', (Math.random() * 120 - 60) + 'px');
+  $('#stage').appendChild(d);
+  setTimeout(() => d.remove(), 3300);
+}
+// Ses efekti: yayına karışır
+const SFX = ['jingle', 'ding', 'alkis', 'davul', 'tada'];
+function playSfx(name) {
+  if (!SFX.includes(name)) return;
+  const a = new Audio('/sfx/' + name + '.mp3'); a.volume = 0.9; a.play().catch(() => {});
+}
+
+room.on(RoomEvent.DataReceived, (payload, _p, _k, topic) => {
+  try {
+    const m = JSON.parse(new TextDecoder().decode(payload));
+    if (topic === 'react' && typeof m.e === 'string' && m.e.length <= 8) flyEmoji(m.e);
+    if (topic === 'sfx') playSfx(m.name);
+  } catch {}
+});
+
+room.on(RoomEvent.TrackSubscribed, (track, _pub, participant) => {
+  if (track.kind === Track.Kind.Audio) {
+    const el = track.attach();
+    document.body.appendChild(el);
+    audioEls.get(participant.identity)?.remove();
+    audioEls.set(participant.identity, el);
+  }
+  render();
+});
+room.on(RoomEvent.TrackUnsubscribed, (track, _pub, participant) => {
+  if (track.kind === Track.Kind.Audio) { audioEls.get(participant.identity)?.remove(); audioEls.delete(participant.identity); }
+});
+for (const ev of [RoomEvent.TrackUnsubscribed, RoomEvent.ParticipantConnected, RoomEvent.ParticipantDisconnected,
+  RoomEvent.ParticipantAttributesChanged, RoomEvent.TrackMuted, RoomEvent.TrackUnmuted]) room.on(ev, render);
+room.on(RoomEvent.Disconnected, () => console.log('END_RECORDING'));
+
+if (q.get('url') && q.get('token')) {
+  await room.connect(q.get('url'), q.get('token'));
+  render();
+} else {
+  // Önizleme: tarayıcıda parametresiz açınca örnek katmanlar
+  //  ?pro=1 ?soru=1 ?anket=1 ?quiz=1 ?qr=1 ?urun=1 ?sure=1 ?sahne=starting|brb|ended ?tema=neon|glass|minimal ?bant=auto
+  $('#wait span').textContent = 'Önizleme — yayında burada PROGRAM görüntüsü olur';
+  // ?bg=/brand/x.jpg → tanıtım görselleri için program yerine sabit bir kare
+  if (q.get('bg')?.startsWith('/brand/')) { $('#wait span').textContent = ''; $('#wait').style.background = `#000 url(${q.get('bg')}) center/cover`; }
+  const tema = q.get('tema');
+  const demo = {
+    theme: tema ? { band: tema, scene: tema === 'neon' ? 'grid' : 'aurora' } : {},
+    accent: tema === 'neon' ? '#00f5d4' : undefined, accent2: tema === 'neon' ? '#f15bb5' : undefined,
+    logo: { url: q.get('logo') || '', pos: 'tl', size: 'm' },
+    banner: { on: !q.has('bant'), title: '@hypevision', subtitle: 'Cuma soru-cevap · canlı' },
+    autoBand: true,
+    ticker: { on: true, text: 'Rejivio ile takipçilerinle canlı yayın  •  Takip etmeyi unutma  •  ', speed: 'normal' },
+    sponsors: { on: !q.has('urun'), interval: 3, items: [{ name: 'Orbisoft', logo: '' }] },
+    question: { on: q.has('soru'), author: 'ayse', text: 'Yeni videoyu ne zaman çekiyorsun?' },
+    poll: { on: q.has('anket'), q: 'Bir sonraki video hangisi?', options: ['Vlog', 'Tutorial', 'Soru-cevap'], votes: [12, 30, 8] },
+    quiz: { on: q.has('quiz'), q: 'Türkiye\'nin başkenti?', options: ['İstanbul', 'Ankara', 'İzmir'], answers: [3, 9, 1], reveal: true, correct: 1,
+      board: [{ name: 'yayin1', pts: 30 }, { name: 'ayse', pts: 20 }] },
+    qr: { on: q.has('qr') },
+    product: { on: q.has('urun'), name: 'Hype Kulaklık', price: '₺1.299', url: 'https://hypevisionlab.com', image: '' },
+    timer: { on: q.has('sure'), until: new Date(Date.now() + 75000).toISOString() },
+    next: q.has('sure') ? 'yayin2' : '',
+    scene: { mode: q.get('sahne') || 'live', until: new Date(Date.now() + 300000).toISOString() },
+  };
+  const fake = { identity: 'demo', metadata: '{"role":"host"}', attributes: { overlay: JSON.stringify(demo), code: 'NQ9AC4' }, getTrackPublication: () => undefined };
+  room.remoteParticipants.set('demo', fake);
+  room.getParticipantByIdentity = () => undefined;
+  render();
+  setInterval(() => flyEmoji(['❤️', '🔥', '😂', '👏'][Math.floor(Math.random() * 4)]), q.has('tepki') ? 400 : 1e9);
+}
+</script>
+</body>
+</html>

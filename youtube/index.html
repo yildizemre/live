@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rejivio · YouTube</title>
+<style>
+  body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #0b0a10; color: #f4f2fa;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; text-align: center; padding: 24px; box-sizing: border-box; }
+  .box { max-width: 360px; }
+  .icon { width: 84px; height: 84px; border-radius: 50%; margin: 0 auto 22px; display: flex; align-items: center; justify-content: center; font-size: 40px; }
+  .ok { background: #ff0033; } .bad { background: #3a1d24; }
+  h1 { font-size: 24px; margin: 0 0 10px; }
+  p { color: #a49fb5; line-height: 1.5; margin: 0 0 26px; }
+  a { display: inline-block; background: #8e4ff0; color: #fff; text-decoration: none; padding: 14px 26px; border-radius: 14px; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="box"><div class="icon" id="i"></div><h1 id="h"></h1><p id="p"></p><a id="a" href="hypelive://youtube">Uygulamaya dön</a></div>
+<script>
+  // Google onayından sonra sunucu buraya yönlendirir; uygulama hypelive://youtube ile geri açılır
+  const q = new URLSearchParams(location.search), ok = q.get('durum') === 'ok', m = q.get('m') || '';
+  const back = 'hypelive://youtube?durum=' + (ok ? 'ok' : 'hata');
+  document.getElementById('i').className = 'icon ' + (ok ? 'ok' : 'bad');
+  document.getElementById('i').textContent = ok ? '▶' : '!';
+  document.getElementById('h').textContent = ok ? 'YouTube bağlandı' : 'Bağlanamadı';
+  document.getElementById('p').textContent = ok ? (m ? `"${m}" kanalı bağlandı. Artık yayın anahtarı girmeden YouTube'da canlı yayın açabilirsin.` : 'Hesabın bağlandı.') : (m || 'Tekrar dene.');
+  document.getElementById('a').href = back;
+  setTimeout(() => { location.href = back; }, 800);
+</script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="tr" translate="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google" content="notranslate">
+<meta name="robots" content="noindex">
+<title>Rejivio Kamera</title>
+<link rel="icon" href="/brand/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07061a;--card:#110f2c;--raised:#1a1740;--line:rgba(255,255,255,.08);--text:#f3f1ff;--muted:#9a96c0;--violet:#9b3dff;--ok:#34d399;--warn:#fbbf24;--live:#ff4d6d;
+  --grad:linear-gradient(120deg,#9b3dff,#e63ce0 55%,#ff6a6a)}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--text);font:500 14px 'Plus Jakarta Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
+button,input,select{font:inherit;color:inherit}
+.muted{color:var(--muted)} .small{font-size:12px}
+.center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+.box{width:100%;max-width:420px;display:flex;flex-direction:column;gap:12px}
+.box h1{font-size:24px} .box img.ic{width:56px;height:56px;border-radius:14px}
+.btn{border:0;border-radius:12px;padding:11px 14px;background:var(--raised);cursor:pointer;font-weight:700}
+.btn:hover{filter:brightness(1.15)} .btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.pri{background:var(--grad)} .btn.live{background:var(--live)}
+input,select{background:var(--raised);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;outline:none}
+input:focus,select:focus{border-color:var(--violet)}
+.code{letter-spacing:8px;font-size:26px;font-weight:800;text-align:center;text-transform:uppercase}
+.err{color:var(--live);font-size:13px;min-height:16px}
+.chk{display:flex;gap:10px;align-items:flex-start;cursor:pointer;font-size:13px;color:var(--muted)} .chk input{width:auto;margin-top:3px}
+.preview{position:relative;border-radius:18px;overflow:hidden;background:#000;aspect-ratio:16/9;border:3px solid var(--line)}
+.preview.onair{border-color:var(--live)}
+.preview video{width:100%;height:100%;object-fit:cover;display:block}
+.badge{position:absolute;top:10px;left:10px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:800;background:rgba(0,0,0,.6)}
+.badge.live{background:var(--live)}
+.row{display:flex;gap:8px}
+.wide{max-width:760px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script type="module">
+// Webcam ya da capture kartı ile yayına konuk olarak katılma. Uygulamadaki "Kodla katıl" ile aynı kurallar:
+// giriş, kod, konuk onayı, bekleme odası. Yayıncı hesabıyla katılınmaz (telefonu odadan düşürür).
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
+import { Room, RoomEvent, Track, createLocalTracks } from 'https://cdn.jsdelivr.net/npm/livekit-client@2.22.3/+esm';
+
+const sb = createClient('https://rrcknioeasynsbsmmnwr.supabase.co', 'sb_publishable_yXoivKQXRJM1CACo9RUThw_nO61Pkek');
+const app = document.getElementById('app');
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const clean = (m) => String(m ?? '').replace(/^PLAN_LIMIT:\s*/, '');
+const codeFromUrl = () => (new URLSearchParams(location.search).get('kod') || '').toUpperCase();
+
+function loginView(msg = '') {
+  app.innerHTML = `<div class="center"><form class="box" id="f">
+    <img class="ic" src="/brand/icon.png" alt=""><h1>Kamerayla katıl</h1>
+    <p class="muted">Bilgisayarının kamerasını ya da capture kartına bağlı kamerayı yayına kamera olarak bağla. Rejivio hesabınla giriş yap.</p>
+    <input id="e" type="email" placeholder="E-posta" autocomplete="username" required>
+    <input id="p" type="password" placeholder="Şifre" autocomplete="current-password" required>
+    <div class="err">${esc(msg)}</div><button class="btn pri" type="submit">Giriş yap</button></form></div>`;
+  $('#f').onsubmit = async (ev) => {
+    ev.preventDefault();
+    const { error } = await sb.auth.signInWithPassword({ email: $('#e').value.trim(), password: $('#p').value });
+    error ? loginView('E-posta ya da şifre hatalı') : codeView();
+  };
+}
+
+function codeView(msg = '') {
+  app.innerHTML = `<div class="center"><form class="box" id="f"><h1>Yayın kodu</h1>
+    <p class="muted">Yayıncının paylaştığı 6 haneli kodu yaz.</p>
+    <input id="c" class="code" maxlength="6" value="${esc(codeFromUrl())}" autocomplete="off" required>
+    <label class="chk"><input type="checkbox" id="ok" required> <span>Kameramın ve sesimin yayıncının canlı yayınında, kayıtlarında ve kliplerinde kullanılabileceğini kabul ediyorum.</span></label>
+    <div class="err">${esc(msg)}</div><button class="btn pri" type="submit">Devam</button>
+    <button class="btn" type="button" id="out">Çıkış yap</button></form></div>`;
+  $('#out').onclick = async () => { await sb.auth.signOut(); loginView(); };
+  $('#f').onsubmit = async (ev) => {
+    ev.preventDefault();
+    const { data, error } = await sb.rpc('join_by_code', { code: $('#c').value.trim().toUpperCase(), consent: $('#ok').checked });
+    if (error) return codeView(clean(error.message));
+    if (data.status === 'host') return codeView('Bu yayının sahibisin. Yayıncı hesabıyla kamera olarak katılınca telefonun odadan düşer; başka bir hesapla gir.');
+    data.status === 'pending' ? waitView(data.session) : deviceView(data.session);
+  };
+}
+
+// Bekleme odası: yayıncı "Al" diyene kadar bekle
+async function waitView(session) {
+  const { data: { user } } = await sb.auth.getUser();
+  app.innerHTML = `<div class="center"><div class="box"><h1>Sıradasın</h1>
+    <p class="muted">"${esc(session.title)}" yayınına alınmayı bekliyorsun. Yayıncı onaylayınca kameran açılacak.</p>
+    <button class="btn" id="x">Vazgeç</button></div></div>`;
+  let done = false;
+  $('#x').onclick = () => { done = true; codeView(); };
+  while (!done) {
+    const { data } = await sb.from('invites').select('status').eq('session_id', session.id).eq('invitee_id', user.id).maybeSingle();
+    if (data?.status === 'accepted') return deviceView(session);
+    if (data?.status === 'declined') return codeView('Yayıncı bu kez seni almadı.');
+    await new Promise((r) => setTimeout(r, 3000));
+  }
+}
+
+// Kamera ve mikrofon seçimi, önizleme
+async function deviceView(session) {
+  app.innerHTML = `<div class="center"><div class="box wide"><h1>${esc(session.title)}</h1>
+    <div class="preview" id="pv"><span class="badge">ÖNİZLEME</span></div>
+    <div class="row"><select id="cam"></select><select id="mic"></select></div>
+    <select id="res"><option value="720">720p (önerilen)</option><option value="1080">1080p (güçlü bağlantı)</option><option value="540">540p (zayıf bağlantı)</option></select>
+    <div class="err" id="err"></div><button class="btn live" id="go">● Yayına bağlan</button></div></div>`;
+  let tracks = [];
+  try {
+    // İzin istemek için önce varsayılan cihazlarla aç; ardından cihaz adları listelenebilir
+    tracks = await createLocalTracks({ audio: true, video: { resolution: { width: 1280, height: 720 } } });
+  } catch (e) {
+    $('#err').textContent = 'Kamera ya da mikrofon açılamadı: tarayıcıda izin ver ve sayfayı yenile.';
+    return;
+  }
+  const show = () => { const v = tracks.find((t) => t.kind === 'video'); $('#pv').querySelector('video')?.remove(); if (v) $('#pv').prepend(v.attach()); };
+  show();
+  const devs = await navigator.mediaDevices.enumerateDevices();
+  const fill = (sel, kind, cur) => { sel.innerHTML = devs.filter((d) => d.kind === kind).map((d, i) => `<option value="${d.deviceId}" ${d.deviceId === cur ? 'selected' : ''}>${esc(d.label || (kind === 'videoinput' ? 'Kamera ' : 'Mikrofon ') + (i + 1))}</option>`).join(''); };
+  fill($('#cam'), 'videoinput', tracks.find((t) => t.kind === 'video')?.mediaStreamTrack.getSettings().deviceId);
+  fill($('#mic'), 'audioinput', tracks.find((t) => t.kind === 'audio')?.mediaStreamTrack.getSettings().deviceId);
+
+  const reopen = async () => {
+    tracks.forEach((t) => t.stop());
+    const h = { 1080: [1920, 1080], 720: [1280, 720], 540: [960, 540] }[$('#res').value];
+    try {
+      tracks = await createLocalTracks({ audio: { deviceId: $('#mic').value, echoCancellation: true, noiseSuppression: true },
+        video: { deviceId: $('#cam').value, resolution: { width: h[0], height: h[1] } } });
+      $('#err').textContent = ''; show();
+    } catch { $('#err').textContent = 'Bu cihaz açılamadı.'; }
+  };
+  $('#cam').onchange = reopen; $('#mic').onchange = reopen; $('#res').onchange = reopen;
+  $('#go').onclick = () => liveView(session, tracks);
+}
+
+async function liveView(session, tracks) {
+  $('#go').disabled = true;
+  const { data, error } = await sb.functions.invoke('livekit-token', { body: { sessionId: session.id } });
+  let msg = data?.error;
+  if (error) msg = (await error.context?.json?.().catch(() => null))?.error ?? error.message;
+  if (msg) { $('#err').textContent = clean(msg); $('#go').disabled = false; return; }
+
+  const room = new Room({ adaptiveStream: true, dynacast: true });
+  try {
+    await room.connect(data.url, data.token);
+    for (const t of tracks) await room.localParticipant.publishTrack(t, t.kind === 'video' ? { simulcast: true, source: Track.Source.Camera } : { source: Track.Source.Microphone });
+  } catch (e) { $('#err').textContent = 'Bağlanılamadı: ' + e.message; $('#go').disabled = false; return; }
+
+  // Yayında mıyım: yayıncının "program" özelliği bu kimliği gösteriyorsa kırmızı çerçeve
+  const me = room.localParticipant.identity;
+  const host = () => [...room.remoteParticipants.values()].find((p) => { try { return JSON.parse(p.metadata || '{}').role === 'host'; } catch { return false; } });
+  const update = () => {
+    const h = host(); let o = {}; try { o = JSON.parse(h?.attributes?.overlay || '{}'); } catch {}
+    const on = h?.attributes?.program === me || (o.layout?.mode === 'split' && o.layout?.second === me);
+    $('#pv').classList.toggle('onair', on);
+    $('#st').className = 'badge ' + (on ? 'live' : '');
+    $('#st').textContent = on ? 'YAYINDASIN' : 'BAĞLI · BEKLEMEDE';
+    if (h?.attributes?.ended === '1') { room.disconnect(); }
+  };
+  $('#pv .badge').id = 'st';
+  $('#go').outerHTML = '<div class="row"><button class="btn" id="mute">🎙 Mikrofon açık</button><button class="btn live" id="leave">Ayrıl</button></div>';
+  $('#cam').disabled = $('#mic').disabled = $('#res').disabled = true;
+  let micOn = true;
+  $('#mute').onclick = async () => { micOn = !micOn; await room.localParticipant.setMicrophoneEnabled(micOn); $('#mute').textContent = micOn ? '🎙 Mikrofon açık' : '🔇 Mikrofon kapalı'; };
+  $('#leave').onclick = () => room.disconnect();
+  room.on(RoomEvent.ParticipantAttributesChanged, update).on(RoomEvent.ParticipantConnected, update);
+  room.on(RoomEvent.Disconnected, () => { tracks.forEach((t) => t.stop()); app.innerHTML = '<div class="center"><div class="box"><h1>Yayından çıktın</h1><button class="btn pri" onclick="location.reload()">Tekrar katıl</button></div></div>'; });
+  update();
+}
+
+sb.auth.getSession().then(({ data }) => data.session ? codeView() : loginView());
+</script>
+</body>
+</html>
