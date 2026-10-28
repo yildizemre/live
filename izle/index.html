@@ -47,7 +47,7 @@ function waiting(info) {
   hls?.destroy(); hls = null;
   stage.innerHTML = `<div class="msg">${info ? `<h1>${esc(info.title)}</h1><p>@${esc(info.host)} henüz canlı değil. Yayın başlayınca burada otomatik açılır.</p>`
     : '<h1>Yayın bulunamadı</h1><p>Kod hatalı ya da yayın bitmiş.</p>'}
-    ${code ? `<a class="btn pri" href="/k/${esc(code)}">Kameranla katıl</a>` : ''}</div>`;
+    ${code && info?.guests ? `<a class="btn pri" href="/k/${esc(code)}">Kameranla katıl</a>` : ''}</div>`;
 }
 
 function play(info) {
@@ -57,7 +57,7 @@ function play(info) {
     <div class="top"><span class="av">${info.avatar ? `<img src="${esc(info.avatar)}" alt="">` : esc((info.host || '?')[0].toUpperCase())}</span>
       <div class="meta"><b>${esc(info.title)}</b><span>@${esc(info.host)}</span></div><span class="pill">CANLI</span></div>
     <button class="btn unmute" id="um">🔊 Sesi aç</button>
-    <div class="bottom"><button class="btn" id="sh">Paylaş</button><a class="btn pri" href="/k/${esc(code)}">Kameranla katıl</a></div>`;
+    <div class="bottom"><button class="btn" id="sh">Paylaş</button>${info.guests ? `<a class="btn pri" href="/k/${esc(code)}">Kameranla katıl</a>` : ''}</div>`;
   const v = document.getElementById('v');
   // Tarayıcılar sessiz otomatik oynatmaya izin verir; ses için bir dokunuş gerekir
   document.getElementById('um').onclick = () => { v.muted = false; v.play(); document.getElementById('um').remove(); };

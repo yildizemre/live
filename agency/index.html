@@ -88,7 +88,7 @@ async function render(user, ag) {
     <h2>Yayıncılar</h2>
     <div class="box"><table><thead><tr><th>Yayıncı</th><th>Paket</th><th>Yayın</th><th>Canlı dk</th><th></th><th>Konuk</th><th>Klip</th><th>Takipçi</th><th>Platformlar</th></tr></thead><tbody>
       ${rep.length ? rep.map((r) => `<tr><td><a style="color:#c4a6ff" href="/u/${esc(r.username)}" target="_blank">@${esc(r.username)}</a></td>
-        <td><span class="pill ${r.plan !== 'free' ? 'pro' : ''}">${({ free: 'Başlangıç', pro: 'Creator', team: 'Ekip' })[r.plan] ?? r.plan}</span></td><td>${r.sessions}</td><td>${r.live_minutes}</td>
+        <td><span class="pill ${r.plan !== 'free' ? 'pro' : ''}">${({ free: 'Standart', pro: 'Premium', team: 'Pro' })[r.plan] ?? r.plan}</span></td><td>${r.sessions}</td><td>${r.live_minutes}</td>
         <td style="width:18%"><div class="bar" style="width:${(r.live_minutes / maxMin) * 100}%"></div></td>
         <td>${r.guests}</td><td>${r.clips}</td><td>${r.followers}</td><td class="muted">${(r.platforms || []).join(', ') || '—'}</td></tr>`).join('')
         : '<tr><td colspan="9" class="muted">Henüz kabul etmiş yayıncı yok. Aşağıdan davet et.</td></tr>'}</tbody></table></div>
