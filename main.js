@@ -10,7 +10,16 @@ burger.addEventListener('click', () => setMenu(!links.classList.contains('open')
 links.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setMenu(false)));
 addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
 
-// İzleyici ne görür: sekmeler
+// Kaydırınca menüye cam zemin
+const nav = document.getElementById('nav');
+const onScroll = () => nav.classList.toggle('scrolled', scrollY > 20);
+addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+// Kaydırınca belirme
+const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach((el, i) => { el.style.transitionDelay = `${(i % 5) * 60}ms`; io.observe(el); });
+
+// Yayın görüntüsü sekmeleri
 const scr = document.getElementById('scr');
 const cap = document.getElementById('cap');
 document.querySelectorAll('.out-tabs button').forEach((b) => b.addEventListener('click', () => {
@@ -18,16 +27,5 @@ document.querySelectorAll('.out-tabs button').forEach((b) => b.addEventListener(
   scr.style.opacity = 0;
   setTimeout(() => { scr.src = `img/${b.dataset.img}.webp`; scr.alt = 'Yayın görüntüsü: ' + b.textContent; cap.textContent = b.dataset.cap; scr.style.opacity = 1; }, 150);
 }));
-
-// Özellik satırı üstüne gelince soldaki telefon o ekranı göstersin
-const fimg = document.getElementById('fimg');
-const rows = document.querySelectorAll('#spec > div');
-const showRow = (row) => {
-  rows.forEach((r) => r.classList.toggle('on', r === row));
-  const src = `img/${row.dataset.img}.webp`;
-  if (!fimg.src.endsWith(src)) { fimg.style.opacity = 0; setTimeout(() => { fimg.src = src; fimg.style.opacity = 1; }, 150); }
-};
-rows.forEach((r) => { r.addEventListener('mouseenter', () => showRow(r)); r.addEventListener('click', () => showRow(r)); });
-showRow(rows[0]);
 
 document.getElementById('yr').textContent = new Date().getFullYear();
