@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://yildizemre.github.io/live/sitemap.xml
